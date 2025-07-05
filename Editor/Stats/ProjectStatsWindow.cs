@@ -34,7 +34,7 @@ namespace Strix.Editor.Stats {
         /// </summary>
         private void OnGUI() {
             GUILayout.Label("Folder Path", EditorStyles.boldLabel);
-            folderPath = EditorGUILayout.TextField("Folder Path", folderPath);
+            folderPath = EditorGUILayout.TextField(folderPath);
             
             StrixEditorUIUtils.DrawResponsiveButton(" Analyze", "BuildSettings.Editor", () => {
                 (_stats, _log) = ProjectStatsAnalyzer.Analyze(folderPath);

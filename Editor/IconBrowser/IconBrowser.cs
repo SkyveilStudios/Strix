@@ -4,15 +4,15 @@ using UnityEngine;
 
 namespace Strix.Editor.IconBrowser {
     public class IconBrowser : EditorWindow {
-        private const int IconColumns = 6;
-        private const float IconSize = 64.0f;
-        private const float IconLabelWidth = 96.0f;
-        
-        private Vector2 _scrollPos;
+        private const float IconSize = 64f;
+        private const float IconLabelWidth = 96f;
+        private const float Padding = 12f;
+
+        private Vector2 _scroll;
         private List<(string name, Texture icon)> _icons;
         private bool _scanned;
         private string _search = "";
-        
+
         [MenuItem("Strix/Icon Browser")]
         public static void ShowWindow() {
             GetWindow<IconBrowser>("Icon Browser");
@@ -23,7 +23,7 @@ namespace Strix.Editor.IconBrowser {
                 ScanAllIcons();
                 _scanned = true;
             }
-            
+
             DrawSearchField();
             DrawIconGrid();
         }
@@ -50,16 +50,17 @@ namespace Strix.Editor.IconBrowser {
         }
 
         private void DrawIconGrid() {
-            _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
+            _scroll = EditorGUILayout.BeginScrollView(_scroll);
 
-            var shown = 0;
-            var inRow = false;
+            int columns = Mathf.Max(1, Mathf.FloorToInt((position.width - Padding) / IconLabelWidth));
+            int shown = 0;
+            bool inRow = false;
 
             foreach (var (iconName, texture) in _icons) {
                 if (!string.IsNullOrEmpty(_search) && !iconName.ToLower().Contains(_search.ToLower()))
                     continue;
 
-                if (shown % IconColumns == 0) {
+                if (shown % columns == 0) {
                     EditorGUILayout.BeginHorizontal();
                     inRow = true;
                 }
@@ -67,7 +68,7 @@ namespace Strix.Editor.IconBrowser {
                 DrawIconItem(iconName, texture);
                 shown++;
 
-                if (shown % IconColumns != 0) continue;
+                if (shown % columns != 0) continue;
                 EditorGUILayout.EndHorizontal();
                 inRow = false;
             }
@@ -75,7 +76,7 @@ namespace Strix.Editor.IconBrowser {
             if (inRow) EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndScrollView();
         }
-        
+
         private static void DrawIconItem(string iconName, Texture texture) {
             GUILayout.BeginVertical(GUILayout.Width(IconLabelWidth));
             GUILayout.Label(new GUIContent(texture), GUILayout.Width(IconSize), GUILayout.Height(IconSize));

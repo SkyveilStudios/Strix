@@ -14,6 +14,10 @@ namespace Strix.Editor.Stats {
 
         private ProjectStatsData _stats;
         private string _log;
+        private Vector2 _scrollPos;
+        private bool _showMetadata = true;
+        private bool _showCodeStats = true;
+        private bool _showAssetStats = true;
 
         /// <summary>
         /// Opens the Project Stats window from the Unity menu.
@@ -39,9 +43,24 @@ namespace Strix.Editor.Stats {
             if (_stats == null) return;
 
             GUILayout.Space(20);
-            DrawMetadata();
-            DrawCodeStats();
-            DrawAssetStats();
+            _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos);
+
+            using (new EditorGUILayout.VerticalScope("box")) {
+                _showMetadata = EditorGUILayout.Foldout(_showMetadata, "Project Metadata", true);
+                if (_showMetadata) DrawMetadata();
+            }
+
+            using (new EditorGUILayout.VerticalScope("box")) {
+                _showCodeStats = EditorGUILayout.Foldout(_showCodeStats, "Code Analysis", true);
+                if (_showCodeStats) DrawCodeStats();
+            }
+
+            using (new EditorGUILayout.VerticalScope("box")) {
+                _showAssetStats = EditorGUILayout.Foldout(_showAssetStats, "Asset Analysis", true);
+                if (_showAssetStats) DrawAssetStats();
+            }
+            
+            EditorGUILayout.EndScrollView();
 
             GUILayout.Space(20);
             GUILayout.Label("Results saved to ProjectStatsLog.txt", EditorStyles.boldLabel);

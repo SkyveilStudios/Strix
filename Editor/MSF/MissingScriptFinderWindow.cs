@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Strix.Editor.Common;
+using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,9 +25,9 @@ namespace Strix.Editor.MSF {
             EditorGUILayout.Space(10);
 
             EditorGUILayout.BeginHorizontal();
-            DrawResponsiveButton(" Scan Selected", "d_Search Icon", MissingScriptScanner.ScanSelectedObjects, Selection.gameObjects.Length > 0, "Scan currently selected GameObjects");
-            DrawResponsiveButton(" Scan Project", "d_FolderOpened Icon", MissingScriptScanner.ScanEntireProject, true, "Scan all prefabs and scenes in the project");
-            DrawResponsiveButton(" Clear", "d_TreeEditor.Trash", MissingScriptScanner.Clear, MissingScriptScanner.Results.Count > 0, "Clear scan results");
+            StrixEditorUIUtils.DrawResponsiveButton(" Scan Selected", "d_Search Icon", MissingScriptScanner.ScanSelectedObjects, Selection.gameObjects.Length > 0, "Scan currently selected GameObjects");
+            StrixEditorUIUtils.DrawResponsiveButton(" Scan Project", "d_FolderOpened Icon", MissingScriptScanner.ScanEntireProject, true, "Scan all prefabs and scenes in the project");
+            StrixEditorUIUtils.DrawResponsiveButton(" Clear", "d_TreeEditor.Trash", MissingScriptScanner.Clear, MissingScriptScanner.Results.Count > 0, "Clear scan results");
 
             EditorGUILayout.EndHorizontal();
 
@@ -99,15 +100,6 @@ namespace Strix.Editor.MSF {
             }
 
             EditorGUILayout.EndScrollView();
-        }
-
-        private void DrawResponsiveButton(string label, string iconName, System.Action callback, bool enabled, string tooltip) {
-            GUI.enabled = enabled;
-            var content = new GUIContent(label, EditorGUIUtility.IconContent(iconName).image, tooltip);
-            if (GUILayout.Button(content, GUILayout.Height(28), GUILayout.MinWidth(80), GUILayout.ExpandWidth(true))) {
-                callback.Invoke();
-            }
-            GUI.enabled = true;
         }
 
         private void DrawStatRow(string label, string value, string tooltip = null) {

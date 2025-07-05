@@ -2,6 +2,7 @@
 using System.IO;
 using UnityEditor;
 using UnityEngine;
+using Strix.Editor.Common;
 
 namespace Strix.Editor.Stats {
     /// <summary>
@@ -34,11 +35,11 @@ namespace Strix.Editor.Stats {
         private void OnGUI() {
             GUILayout.Label("Folder Path", EditorStyles.boldLabel);
             folderPath = EditorGUILayout.TextField("Folder Path", folderPath);
-
-            if (GUILayout.Button("Analyze")) {
+            
+            StrixEditorUIUtils.DrawResponsiveButton(" Analyze", "BuildSettings.Editor", () => {
                 (_stats, _log) = ProjectStatsAnalyzer.Analyze(folderPath);
                 File.WriteAllText(LogFilePath, _log);
-            }
+            });
 
             if (_stats == null) return;
 

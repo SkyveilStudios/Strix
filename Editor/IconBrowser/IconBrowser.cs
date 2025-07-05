@@ -36,7 +36,7 @@ namespace Strix.Editor.IconBrowser {
                 ScanAllIcons();
                 _scanned = true;
             }
-            StrixEditorUIUtils.DrawHeader(WindowTitle);
+            StrixEditorUIUtils.DrawTitle(WindowTitle);
             DrawSearchField();
             DrawIconGrid();
         }

@@ -22,7 +22,7 @@ namespace Strix.Editor.MSF {
             };
 
             EditorGUILayout.Space(10);
-            StrixEditorUIUtils.DrawHeader(WindowTitle);
+            StrixEditorUIUtils.DrawTitle(WindowTitle);
             EditorGUILayout.Space(10);
 
             EditorGUILayout.BeginHorizontal();

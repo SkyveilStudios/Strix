@@ -34,7 +34,7 @@ namespace Strix.Editor.Stats {
         /// Draws the main GUI for the stats window.
         /// </summary>
         private void OnGUI() {
-            StrixEditorUIUtils.DrawHeader(WindowTitle);
+            StrixEditorUIUtils.DrawTitle(WindowTitle);
             GUILayout.Label("Folder Path", EditorStyles.boldLabel);
             folderPath = EditorGUILayout.TextField(folderPath);
             

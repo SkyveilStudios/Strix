@@ -3,7 +3,7 @@ namespace Strix.Editor.Stats {
     /// Container for all collected project stats
     /// </summary>
     public class ProjectStatsData {
-        public ProjectMetadata MetaData { get; } = new();
+        public ProjectMetadata Metadata { get; } = new();
         public CodeStats Code { get; set; }  = new();
         public AssetStats Assets { get; set; } = new();
     }

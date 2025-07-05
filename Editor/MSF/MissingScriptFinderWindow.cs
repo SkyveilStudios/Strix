@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 namespace Strix.Editor.MSF {
     public class MissingScriptFinderWindow : EditorWindow {
+        private const string WindowTitle = "Missing Script Finder";
         private Vector2 _scrollPos;
 
         [MenuItem("Strix/Missing Script Finder")]
@@ -21,7 +22,7 @@ namespace Strix.Editor.MSF {
             };
 
             EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("Missing Scripts Finder", headerStyle);
+            StrixEditorUIUtils.DrawHeader(WindowTitle);
             EditorGUILayout.Space(10);
 
             EditorGUILayout.BeginHorizontal();

@@ -10,6 +10,7 @@ namespace Strix.Editor.Stats {
     /// Displays metadata, code stats, and asset breakdowns.
     /// </summary>
     public class ProjectStatsWindow : EditorWindow {
+        private const string WindowTitle = "Project Stats";
         [SerializeField] private string folderPath = "Assets";
         private static string LogFilePath => Path.Combine(Application.dataPath, "ProjectStatsLog.txt");
 
@@ -33,6 +34,7 @@ namespace Strix.Editor.Stats {
         /// Draws the main GUI for the stats window.
         /// </summary>
         private void OnGUI() {
+            StrixEditorUIUtils.DrawHeader(WindowTitle);
             GUILayout.Label("Folder Path", EditorStyles.boldLabel);
             folderPath = EditorGUILayout.TextField(folderPath);
             

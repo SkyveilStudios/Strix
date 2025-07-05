@@ -34,5 +34,18 @@ namespace Strix.Editor.Common {
                 }
             }
         }
+        
+        /// <summary>
+        /// Draws a header with an icon and label.
+        /// </summary>
+        public static void DrawHeader(string windowTitle) {
+            GUILayout.Space(10);
+            var headerStyle = new GUIStyle(EditorStyles.boldLabel) {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 16
+            };
+            EditorGUILayout.LabelField("🦉 " + windowTitle, headerStyle);
+            GUILayout.Space(10);
+        }
     }
 }

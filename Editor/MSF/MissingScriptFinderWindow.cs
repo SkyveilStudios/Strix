@@ -24,18 +24,20 @@ namespace Strix.Editor.MSF {
             EditorGUILayout.Space(10);
 
             EditorGUILayout.BeginHorizontal();
-            DrawResponsiveButton(" Scan Selected", "d_Search Icon", MissingScriptScanner.ScanSelectedObjects);
-            DrawResponsiveButton(" Scan Project", "d_FolderOpened Icon", MissingScriptScanner.ScanEntireProject);
-            DrawResponsiveButton(" Clear", "d_TreeEditor.Trash", MissingScriptScanner.Clear);
+            DrawResponsiveButton(" Scan Selected", "d_Search Icon", MissingScriptScanner.ScanSelectedObjects, Selection.gameObjects.Length > 0, "Scan currently selected GameObjects");
+            DrawResponsiveButton(" Scan Project", "d_FolderOpened Icon", MissingScriptScanner.ScanEntireProject, true, "Scan all prefabs and scenes in the project");
+            DrawResponsiveButton(" Clear", "d_TreeEditor.Trash", MissingScriptScanner.Clear, MissingScriptScanner.Results.Count > 0, "Clear scan results");
+
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space(15);
             EditorGUILayout.HelpBox("Scan Summary", MessageType.Info);
 
             EditorGUILayout.BeginVertical("box");
-            DrawStatRow("GameObjects Searched", MissingScriptScanner.Stats.GameObjectCount.ToString());
-            DrawStatRow("Components Scanned", MissingScriptScanner.Stats.ComponentCount.ToString());
-            DrawStatRow("Missing Scripts Found", MissingScriptScanner.Stats.MissingCount.ToString());
+            DrawStatRow("GameObjects Searched", MissingScriptScanner.Stats.GameObjectCount.ToString(), "Total GameObjects visited during scan");
+            DrawStatRow("Components Scanned", MissingScriptScanner.Stats.ComponentCount.ToString(), "Total components scanned (including null slots)");
+            DrawStatRow("Missing Scripts Found", MissingScriptScanner.Stats.MissingCount.ToString(), "Number of missing script slots found");
+
             EditorGUILayout.EndVertical();
 
             EditorGUILayout.Space(15);
@@ -99,16 +101,19 @@ namespace Strix.Editor.MSF {
             EditorGUILayout.EndScrollView();
         }
 
-        private void DrawResponsiveButton(string label, string iconName, System.Action callback) {
-            var content = new GUIContent(label, EditorGUIUtility.IconContent(iconName).image);
+        private void DrawResponsiveButton(string label, string iconName, System.Action callback, bool enabled, string tooltip) {
+            GUI.enabled = enabled;
+            var content = new GUIContent(label, EditorGUIUtility.IconContent(iconName).image, tooltip);
             if (GUILayout.Button(content, GUILayout.Height(28), GUILayout.MinWidth(80), GUILayout.ExpandWidth(true))) {
                 callback.Invoke();
             }
+            GUI.enabled = true;
         }
 
-        private void DrawStatRow(string label, string value) {
+        private void DrawStatRow(string label, string value, string tooltip = null) {
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField(label, GUILayout.Width(180));
+            var labelContent = new GUIContent(label, tooltip ?? label);
+            EditorGUILayout.LabelField(labelContent, GUILayout.Width(180));
             EditorGUILayout.LabelField(value, EditorStyles.boldLabel);
             EditorGUILayout.EndHorizontal();
         }

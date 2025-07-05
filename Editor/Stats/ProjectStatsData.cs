@@ -4,8 +4,8 @@ namespace Strix.Editor.Stats {
     /// </summary>
     public class ProjectStatsData {
         public ProjectMetadata MetaData { get; } = new();
-        public CodeStats Code { get; }  = new();
-        public AssetStats Assets { get; } = new();
+        public CodeStats Code { get; set; }  = new();
+        public AssetStats Assets { get; set; } = new();
     }
 
     /// <summary>

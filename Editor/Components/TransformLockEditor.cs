@@ -49,7 +49,7 @@ namespace Strix.Editor.Components {
             if (!AnyAxisLocked(target)) return;
 
             if (_lockIcon == null)
-                _lockIcon = EditorGUIUtility.IconContent("LockIcon-On").image as Texture2D;
+                _lockIcon = EditorGUIUtility.IconContent("AssemblyLock").image as Texture2D;
 
             if (_lockIcon == null) return;
 

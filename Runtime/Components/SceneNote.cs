@@ -44,35 +44,15 @@ namespace Strix.Runtime.Components {
         public float markerRadius = 0.25f;
         
         #if UNITY_EDITOR
-        private void OnDrawGizmos() {
-            if (!ShouldDisplay()) return;
-
-            var displayColor = GetCategoryColor();
-
-            if (showMarker) {
-                Gizmos.color = displayColor;
-                Gizmos.DrawSphere(transform.position, markerRadius);
-            }
-
-            if (showTitle && !string.IsNullOrWhiteSpace(title)) {
-                var style = new GUIStyle(EditorStyles.boldLabel) {
-                    fontSize = titleSize,
-                    normal = new GUIStyleState { textColor = displayColor }
-                };
-                Handles.Label(transform.position + worldOffset, title, style);
-            }
-        }
-
-        private bool ShouldDisplay() {
-            return visibility switch {
+        public bool ShouldDisplayInEditor =>
+            visibility switch {
                 NoteVisibility.Always => true,
                 NoteVisibility.SelectedOnly => Selection.Contains(gameObject),
-                _ => false,
+                _ => false
             };
-        }
 
-        private Color GetCategoryColor() {
-            return category switch {
+        public Color CategoryColor =>
+            category switch {
                 NoteCategory.Info => Color.cyan,
                 NoteCategory.Warning => Color.yellow,
                 NoteCategory.Design => Color.green,
@@ -80,7 +60,6 @@ namespace Strix.Runtime.Components {
                 NoteCategory.Custom => customColor,
                 _ => Color.white
             };
-        }
         #endif
     }
 }

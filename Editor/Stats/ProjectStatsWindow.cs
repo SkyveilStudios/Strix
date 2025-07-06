@@ -20,7 +20,7 @@ namespace Strix.Editor.Stats {
         private bool _showMetadata = true;
         private bool _showCodeStats = true;
         private bool _showAssetStats = true;
-
+        
         /// <summary>
         /// Opens the Project Stats window from the Unity menu.
         /// </summary>

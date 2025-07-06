@@ -3,6 +3,9 @@ using Strix.Runtime.Components;
 using UnityEditor;
 
 namespace Strix.Editor.Components {
+    /// <summary>
+    /// Inspector component for SceneNote
+    /// </summary>
     [CustomEditor(typeof(SceneNote))]
     public class SceneNoteEditor : UnityEditor.Editor {
         private SerializedProperty _note, _fontSize, _worldOffset, _visibility, _category, _customColor;
@@ -20,8 +23,9 @@ namespace Strix.Editor.Components {
         }
 
         public override void OnInspectorGUI() {
-            EditorGUILayout.HelpBox("Displays a floating note and optional marker in the Scene view." +
-                                    "\nColor is determined by category unless 'Custom' is selected.",
+            EditorGUILayout.HelpBox(
+                "Displays a floating note and optional marker in the Scene view." +
+                "\nColor is determined by category unless 'Custom' is selected.",
                 MessageType.Info);
 
             serializedObject.Update();

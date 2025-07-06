@@ -48,7 +48,7 @@ namespace Strix.Editor.Notepad
             GUILayout.Label("Font", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
 
-            if (_fontOptions != null && _fontOptions.Length > 0)
+            if (_fontOptions is { Length: > 0 })
             {
                 _selectedFontIndex = EditorGUILayout.Popup("Font Name", _selectedFontIndex, _fontOptions);
                 _settings.selectedFont = _fontOptions[_selectedFontIndex];
@@ -70,16 +70,16 @@ namespace Strix.Editor.Notepad
 
         private void LoadSettings()
         {
-            _settings = AssetDatabase.LoadAssetAtPath<NotepadSettings>("Assets/SkyveilStudios/Notepad/NotepadSettings.asset");
+            _settings = AssetDatabase.LoadAssetAtPath<NotepadSettings>("Assets/Strix/Editor/Notepad/Settings/NotepadSettings.asset");
             if (_settings) return;
             _settings = CreateInstance<NotepadSettings>();
-            AssetDatabase.CreateAsset(_settings, "Assets/SkyveilStudios/Notepad/NotepadSettings.asset");
+            AssetDatabase.CreateAsset(_settings, "Assets/Strix/Editor/Notepad/Settings/NotepadSettings.asset");
             AssetDatabase.SaveAssets();
         }
 
         private void LoadFonts()
         {
-            var fontPaths = AssetDatabase.FindAssets("t:Font", new[] { "Assets/SkyveilStudios/Notepad/Fonts" })
+            var fontPaths = AssetDatabase.FindAssets("t:Font", new[] { "Assets/Strix/Editor/Notepad/Fonts" })
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .ToArray();
 

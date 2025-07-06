@@ -106,7 +106,7 @@ namespace Strix.Editor.Notepad
 
             if (_settings.useCustomFont)
             {
-                var fontPath = AssetDatabase.FindAssets("t:Font", new[] { "Assets/SkyveilStudios/Notepad/Fonts" })
+                var fontPath = AssetDatabase.FindAssets("t:Font", new[] { "Assets/Strix/Editor/Notepad/Fonts" })
                     .Select(AssetDatabase.GUIDToAssetPath)
                     .FirstOrDefault(path => Path.GetFileNameWithoutExtension(path) == _settings.selectedFont);
 
@@ -142,13 +142,13 @@ namespace Strix.Editor.Notepad
 
         private void LoadSettings()
         {
-            _settings = AssetDatabase.LoadAssetAtPath<NotepadSettings>("Assets/SkyveilStudios/Notepad/NotepadSettings.asset");
+            _settings = AssetDatabase.LoadAssetAtPath<NotepadSettings>("Assets/Strix/Editor/Notepad/Settings/NotepadSettings.asset");
             if (!_settings)
             {
                 _settings = CreateInstance<NotepadSettings>();
-                AssetDatabase.CreateAsset(_settings, "Assets/SkyveilStudios/Notepad/NotepadSettings.asset");
+                AssetDatabase.CreateAsset(_settings, "Assets/Strix/Editor/Notepad/Settings/NotepadSettings.asset");
                 AssetDatabase.SaveAssets();
-                Debug.Log("Created new NotepadSettings asset at: " + "Assets/SkyveilStudios/Notepad/NotepadSettings.asset");
+                Debug.Log("Created new NotepadSettings asset at: " + "Assets/Strix/Editor/Notepad/Settings/NotepadSettings.asset");
             }
         }
 

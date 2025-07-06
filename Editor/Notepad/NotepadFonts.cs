@@ -8,7 +8,7 @@ namespace Strix.Editor.Notepad
 {
     public static class NotepadFonts
     {
-        private static readonly string[] SearchPaths = { "Assets/SkyveilStudios/Notepad/Fonts" };
+        private static readonly string[] SearchPaths = { "Assets/Strix/Editor/Notepad/Fonts" };
 
         public static Font LoadFont(string fontName)
         {

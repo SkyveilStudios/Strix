@@ -17,6 +17,8 @@ namespace Strix.Editor.Notepad
         public int SelectedFileIndex { get; private set; } = -1;
 
         private readonly INoteObserver _view;
+        private const string PrefKey = "Strix.Notepad.LastFile";
+        private bool _isProgrammaticUpdate;
 
         public NotepadModel(INoteObserver view)
         {
@@ -25,12 +27,30 @@ namespace Strix.Editor.Notepad
 
         public void Init()
         {
-            var notesDir = Path.Combine("Assets/SkyveilStudios/Notepad", "Notes");
-            if (!Directory.Exists(notesDir))
-                Directory.CreateDirectory(notesDir);
-            
+            FilePath = EditorPrefs.GetString(PrefKey, "NewNote");
             LoadFiles();
-            LoadTextFromFile();
+            
+            if (Files.Count > 0)
+            {
+                if (!Files.Contains(FilePath))
+                {
+                    FilePath = Files[0];
+                    SelectedFileIndex = 0;
+                }
+                else
+                {
+                    SelectedFileIndex = Files.IndexOf(FilePath);
+                }
+
+                LoadTextFromFile();
+            }
+            else
+            {
+                Text = string.Empty;
+                SelectedFileIndex = -1;
+                FilePath = "NewNote";
+                _view.ModelUpdated();
+            }
         }
 
         public void SelectFileFromList(int index)
@@ -51,18 +71,20 @@ namespace Strix.Editor.Notepad
             LoadTextFromFile();
         }
 
-        public void UpdateTextIfChanged(string text)
+        public void UpdateTextIfChanged(string newText)
         {
-            if (Text == text) return;
+            if (_isProgrammaticUpdate) return;
 
-            Text = text;
+            if (Text == newText) return;
+
+            Text = newText;
             HasUnsavedChanges = true;
             _view.ModelUpdated();
         }
 
         public void LoadFiles()
         {
-            var notesFolder = Path.Combine("Assets/SkyveilStudios/Notepad", "Notes");
+            var notesFolder = Path.Combine("Assets/Strix/Editor/Notepad", "Notes");
             if (!Directory.Exists(notesFolder))
             {
                 Files.Clear();
@@ -97,11 +119,12 @@ namespace Strix.Editor.Notepad
         {
             try
             {
-                var fullPath = Path.Combine("Assets/SkyveilStudios/Notepad", "Notes", FilePath);
+                var fullPath = Path.Combine("Assets/Strix/Editor/Notepad", "Notes", FilePath);
                 File.WriteAllText(fullPath, Text);
                 AssetDatabase.Refresh();
                 HasUnsavedChanges = false;
                 _view.ModelUpdated();
+                EditorPrefs.SetString(PrefKey, FilePath);
             }
             catch (Exception e)
             {
@@ -113,23 +136,23 @@ namespace Strix.Editor.Notepad
         {
             try
             {
-                var fullPath = Path.Combine("Assets/SkyveilStudios/Notepad", "Notes", FilePath);
+                var fullPath = Path.Combine("Assets/Strix/Editor/Notepad", "Notes", FilePath);
+                fullPath = Path.GetFullPath(fullPath); 
+                
                 if (File.Exists(fullPath))
                 {
-                    Debug.LogWarning("Notepad file not found: " + fullPath);
-                    
-                    if (FilePath == "NewNote")
-                    {
-                        Directory.CreateDirectory(Path.Combine("Assets/SkyveilStudios/Notepad", "Notes"));
-                        File.WriteAllText(fullPath, string.Empty);
-                        AssetDatabase.Refresh();
-                        Debug.Log("Created default Notepad file: " + fullPath);
-                    }
+                    _isProgrammaticUpdate = true;
+                    Text = File.ReadAllText(fullPath);
+                    HasUnsavedChanges = false;
+                    GUI.FocusControl(null);
+                    _view.ModelUpdated();
+                    _isProgrammaticUpdate = false;
                 }
-                Text = File.Exists(fullPath) ? File.ReadAllText(fullPath) : string.Empty;
-                HasUnsavedChanges = false;
-                GUI.FocusControl(null);
-                _view.ModelUpdated();
+                else
+                {
+                    Debug.LogWarning("Notepad file not found: " + fullPath);
+                    Text = string.Empty;
+                }
             }
             catch (Exception e)
             {
@@ -156,7 +179,7 @@ namespace Strix.Editor.Notepad
         {
             string newFileName = EditorUtility.SaveFilePanel(
                 "Create New File",
-                Path.Combine("Assets/SkyveilStudios/Notepad", "Notes"),
+                Path.Combine("Assets/Strix/Editor/Notepad", "Notes"),
                 "NewNote",
                 "txt");
 
@@ -164,7 +187,7 @@ namespace Strix.Editor.Notepad
                 return;
 
             newFileName = Path.GetFileName(newFileName);
-            var fullPath = Path.Combine("Assets/SkyveilStudios/Notepad", "Notes", newFileName);
+            var fullPath = Path.Combine("Assets/Strix/Editor/Notepad", "Notes", newFileName);
 
             if (!File.Exists(fullPath))
             {

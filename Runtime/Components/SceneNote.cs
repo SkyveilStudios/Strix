@@ -40,7 +40,7 @@ namespace Strix.Runtime.Components {
 
         [Header("Marker Settings")] 
         public bool showMarker = true;
-        [Range(0.05f, 0.5f)] 
+        [Range(0.05f, 1.0f)] 
         public float markerRadius = 0.25f;
         
         #if UNITY_EDITOR

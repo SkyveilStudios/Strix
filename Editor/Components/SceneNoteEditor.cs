@@ -39,17 +39,12 @@ namespace Strix.Editor.Components {
             EditorGUILayout.PropertyField(_visibility);
             EditorGUILayout.PropertyField(_category);
 
-            if ((SceneNote.NoteCategory)_category.enumValueIndex == SceneNote.NoteCategory.Custom) {
-                EditorGUILayout.PropertyField(_customColor);
-            }
+            if ((SceneNote.NoteCategory)_category.enumValueIndex == SceneNote.NoteCategory.Custom) EditorGUILayout.PropertyField(_customColor);
             
             EditorGUILayout.PropertyField(_description);
-
             EditorGUILayout.Space(6);
             EditorGUILayout.PropertyField(_showMarker);
-            if (_showMarker.boolValue)
-                EditorGUILayout.PropertyField(_markerRadius);
-
+            if (_showMarker.boolValue) EditorGUILayout.PropertyField(_markerRadius);
             serializedObject.ApplyModifiedProperties();
         }
     }

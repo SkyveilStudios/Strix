@@ -1,4 +1,7 @@
-![Strix Banner](https://i.imgur.com/cnyaUE3.png)
+<p align="center">
+  <img src="https://i.imgur.com/xhWB45k.png" alt="Strix Banner" width="300"/>
+</p>
+
 # Strix
 **Strix** is a powerful all-in-one **Unity Editor toolkit** developed by **Midori** with **Skyveil Studios**, designed to enhance your workflow with:
 

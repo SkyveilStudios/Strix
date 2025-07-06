@@ -59,6 +59,20 @@ namespace Strix.Runtime.Components {
 
             CacheCurrentTransform();
         }
+        
+        [ContextMenu("Lock All Axes")]
+        private void LockAll() {
+            lockPositionX = lockPositionY = lockPositionZ = true;
+            lockRotationX = lockRotationY = lockRotationZ = true;
+            lockScaleX = lockScaleY = lockScaleZ = true;
+        }
+
+        [ContextMenu("Unlock All Axes")]
+        private void UnlockAll() {
+            lockPositionX = lockPositionY = lockPositionZ = false;
+            lockRotationX = lockRotationY = lockRotationZ = false;
+            lockScaleX = lockScaleY = lockScaleZ = false;
+        }
     }
 }
 #endif

@@ -9,6 +9,7 @@ namespace Strix.Editor.Components {
     /// </summary>
     [CustomEditor(typeof(TransformLock))]
     public class TransformLockEditor : UnityEditor.Editor {
+        private static Texture2D _lockIcon;
         public override void OnInspectorGUI() {
             EditorGUILayout.HelpBox(
                 "Locks the transform of this GameObject in the Editor to prevent accidental edits.\n" +
@@ -41,6 +42,32 @@ namespace Strix.Editor.Components {
                 axisLabel,
                 "Button",
                 GUILayout.Width(30));
+        }
+        
+        [DrawGizmo(GizmoType.Selected | GizmoType.NonSelected)]
+        private static void DrawLockIconGizmo(TransformLock target, GizmoType gizmoType) {
+            if (!AnyAxisLocked(target)) return;
+
+            if (_lockIcon == null)
+                _lockIcon = EditorGUIUtility.IconContent("LockIcon-On").image as Texture2D;
+
+            if (_lockIcon == null) return;
+
+            var worldPos = target.transform.position + Vector3.up * 2f;
+            var guiPoint = HandleUtility.WorldToGUIPoint(worldPos);
+
+            Handles.BeginGUI();
+            const float size = 24f;
+            GUI.DrawTexture(
+                new Rect(guiPoint.x - size * 0.5f, guiPoint.y - size * 0.5f, size, size),
+                _lockIcon);
+            Handles.EndGUI();
+        }
+
+        private static bool AnyAxisLocked(TransformLock t) {
+            return t.lockPositionX || t.lockPositionY || t.lockPositionZ ||
+                   t.lockRotationX || t.lockRotationY || t.lockRotationZ ||
+                   t.lockScaleX    || t.lockScaleY    || t.lockScaleZ;
         }
     }
 }

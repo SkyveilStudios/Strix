@@ -5,7 +5,8 @@ using UnityEngine;
 
 namespace Strix.Runtime.Components {
     /// <summary>
-    /// Displays text and an optional marker to an object in scene view
+    /// Editor only component for GameObjects which displays in Scene View.
+    /// Supports floating display title, optional marker, and description for notes.
     /// </summary>
     [DisallowMultipleComponent]
     [ExecuteAlways]

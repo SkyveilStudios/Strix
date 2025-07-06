@@ -4,6 +4,9 @@ using UnityEngine;
 using Strix.Runtime.Components;
 
 namespace Strix.Editor.Components {
+    /// <summary>
+    /// Handles editor rendering of SceneNote titles and markers in the Scene view
+    /// </summary>
     [InitializeOnLoad]
     public static class SceneNotePreviewEditor {
         static SceneNotePreviewEditor() { SceneView.duringSceneGui += OnSceneGUI; }

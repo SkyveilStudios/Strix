@@ -4,7 +4,7 @@ using UnityEditor;
 
 namespace Strix.Editor.Components {
     /// <summary>
-    /// Inspector component for SceneNote
+    /// Displays fields for note title, description, visibility, category color, and optional scene markers
     /// </summary>
     [CustomEditor(typeof(SceneNote))]
     public class SceneNoteEditor : UnityEditor.Editor {

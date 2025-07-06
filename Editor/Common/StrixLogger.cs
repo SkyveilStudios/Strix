@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 using System.Diagnostics;
 using UnityEditor;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace Strix.Editor.Common {
@@ -14,7 +15,7 @@ namespace Strix.Editor.Common {
         /// <summary>
         /// Global toggle to enable or disable all logging
         /// </summary>
-        public static bool Enabled { get; private set; }
+        private static bool Enabled { get; set; }
 
         static StrixLogger() {
             Enabled = EditorPrefs.GetBool(EditorPrefKey, true);
@@ -23,25 +24,25 @@ namespace Strix.Editor.Common {
         /// <summary>
         /// Logs an information message to the console
         /// </summary>
-        public static void Log(string message) {
+        public static void Log(string message, Object context = null) {
             if (!Enabled) return;
-            Debug.Log(Format(message));
+            Debug.Log(Format(message, "white"), context);
         }
 
         /// <summary>
         /// Logs a warning message to the console
         /// </summary>
-        public static void LogWarning(string message) {
+        public static void LogWarning(string message, Object context = null) {
             if (!Enabled) return;
-            Debug.LogWarning(Format(message));
+            Debug.LogWarning(Format(message, "yellow"), context);
         }
 
         /// <summary>
         /// Logs an error message to the console
         /// </summary>
-        public static void LogError(string message) {
+        public static void LogError(string message, Object context = null) {
             if (!Enabled) return;
-            Debug.LogError(Format(message));
+            Debug.LogError(Format(message, "red"), context);
         }
 
         /// <summary>
@@ -49,12 +50,12 @@ namespace Strix.Editor.Common {
         /// </summary>
         /// <param name="message">The log message content.</param>
         /// <returns>A formatted string including the script and method as context.</returns>
-        private static string Format(string message) {
+        private static string Format(string message, string color) {
             var frame = new StackTrace().GetFrame(2);
             var method = frame?.GetMethod();
             var className = method?.DeclaringType?.Name ?? "UnknownClass";
             var methodName = method?.Name ?? "UnknownMethod";
-            return $"<b>[{className}::{methodName}]</b> {message}";
+            return $"<color={color}><b>[{className}::{methodName}]</b> {message}</color>";
         }
 
         /// <summary>

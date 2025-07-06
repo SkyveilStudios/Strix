@@ -17,6 +17,7 @@
 ### 🧭 Project Tools
 - **Project Stats** – Analyze project structure, file types, asset sizes, and more
 - **Missing Script Finder** – Scan for and locate GameObjects with missing script references
+- **Icon Browser** – Browse and preview Unity’s internal editor icons for UI development
 - **Task Board** – Simple drag-and-drop board for organizing your development workflow
 - **Notepad** – Notes panel for jotting down ideas, TODOs, or quick references
 

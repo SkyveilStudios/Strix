@@ -14,12 +14,16 @@ namespace Strix.Runtime.Components {
         public enum NoteCategory { Info, Warning, Design, Bug, Custom}
 
         [Header("Note Settings")] 
-        [TextArea(2, 10)] public string note = "Scene Note";
+        [Tooltip("Should the title display in the scene view.")]
+        public bool showTitle = true;
+        
+        [Tooltip("Title displayed in the scene view")] 
+        public string title = "Scene Note";
 
-        [Range(8, 32), Tooltip("Font size for the scene note.")] 
-        public int fontSize = 12;
+        [Range(8, 32), Tooltip("Font size for the Title")] 
+        public int titleSize = 12;
 
-        [Tooltip("Offset from the GameObject for displaying the note.")]
+        [Tooltip("Offset from the GameObject for displaying the title.")]
         public Vector3 worldOffset = new(0, 1f, 0);
 
         [Tooltip("Display condition for the note.")]
@@ -30,10 +34,14 @@ namespace Strix.Runtime.Components {
 
         [Tooltip("Only visible when 'Custom' category is selected.")]
         public Color customColor = Color.white;
+        
+        [TextArea(3, 10), Tooltip("Description for the scene note. Not shown in scene view")]
+        public string description;
 
         [Header("Marker Settings")] 
         public bool showMarker = true;
-        [Range(0.05f, 0.5f)] public float markerRadius = 0.25f;
+        [Range(0.05f, 0.5f)] 
+        public float markerRadius = 0.25f;
         
         #if UNITY_EDITOR
         private void OnDrawGizmos() {
@@ -46,12 +54,13 @@ namespace Strix.Runtime.Components {
                 Gizmos.DrawSphere(transform.position, markerRadius);
             }
 
-            var style = new GUIStyle(EditorStyles.boldLabel) {
-                fontSize = fontSize,
-                normal = new GUIStyleState { textColor = displayColor }
-            };
-
-            Handles.Label(transform.position + worldOffset, note, style);
+            if (showTitle && !string.IsNullOrWhiteSpace(title)) {
+                var style = new GUIStyle(EditorStyles.boldLabel) {
+                    fontSize = titleSize,
+                    normal = new GUIStyleState { textColor = displayColor }
+                };
+                Handles.Label(transform.position + worldOffset, title, style);
+            }
         }
 
         private bool ShouldDisplay() {

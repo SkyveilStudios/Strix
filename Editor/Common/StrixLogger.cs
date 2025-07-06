@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿#if UNITY_EDITOR
+using System.Diagnostics;
+using UnityEditor;
 using Debug = UnityEngine.Debug;
 
 namespace Strix.Editor.Common {
@@ -7,11 +9,22 @@ namespace Strix.Editor.Common {
     /// Provides methods for logging information, warning, and server messages
     /// </summary>
     public static class StrixLogger {
-        #if UNITY_EDITOR
+        private const string EditorPrefKey = "Strix.Logging.Enabled";
+
+        /// <summary>
+        /// Global toggle to enable or disable all logging
+        /// </summary>
+        public static bool Enabled { get; private set; }
+
+        static StrixLogger() {
+            Enabled = EditorPrefs.GetBool(EditorPrefKey, true);
+        }
+        
         /// <summary>
         /// Logs an information message to the console
         /// </summary>
         public static void Log(string message) {
+            if (!Enabled) return;
             Debug.Log(Format(message));
         }
 
@@ -19,6 +32,7 @@ namespace Strix.Editor.Common {
         /// Logs a warning message to the console
         /// </summary>
         public static void LogWarning(string message) {
+            if (!Enabled) return;
             Debug.LogWarning(Format(message));
         }
 
@@ -26,6 +40,7 @@ namespace Strix.Editor.Common {
         /// Logs an error message to the console
         /// </summary>
         public static void LogError(string message) {
+            if (!Enabled) return;
             Debug.LogError(Format(message));
         }
 
@@ -41,6 +56,21 @@ namespace Strix.Editor.Common {
             var methodName = method?.Name ?? "UnknownMethod";
             return $"<b>[{className}::{methodName}]</b> {message}";
         }
-        #endif
+
+        /// <summary>
+        /// Unity Menu Integration
+        /// </summary>
+        [MenuItem("Strix/Logging/Enable Logging", priority = 100)]
+        private static void ToggleLogging() {
+            Enabled = !Enabled;
+            EditorPrefs.SetBool(EditorPrefKey, Enabled);
+        }
+
+        [MenuItem("Strix/Logging/Enable Logging", true)]
+        private static bool ToggleLoggingValidate() {
+            Menu.SetChecked("Strix/Logging/Enable Logging", Enabled);
+            return true;
+        }
     }
 }
+#endif

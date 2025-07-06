@@ -8,6 +8,7 @@ namespace Strix.Editor.Common {
     /// <summary>
     /// Formatted logging utility for debug output.
     /// Provides methods for logging information, warning, and server messages
+    /// Supports highlighting the context, colors, and global toggle to enable/disable
     /// </summary>
     public static class StrixLogger {
         private const string EditorPrefKey = "Strix.Logging.Enabled";
@@ -22,7 +23,7 @@ namespace Strix.Editor.Common {
         }
         
         /// <summary>
-        /// Logs an information message to the console
+        /// Logs an information message to the console with optional context
         /// </summary>
         public static void Log(string message, Object context = null) {
             if (!Enabled) return;
@@ -30,7 +31,7 @@ namespace Strix.Editor.Common {
         }
 
         /// <summary>
-        /// Logs a warning message to the console
+        /// Logs a warning message to the console with optional context
         /// </summary>
         public static void LogWarning(string message, Object context = null) {
             if (!Enabled) return;
@@ -38,7 +39,7 @@ namespace Strix.Editor.Common {
         }
 
         /// <summary>
-        /// Logs an error message to the console
+        /// Logs an error message to the console with optional context
         /// </summary>
         public static void LogError(string message, Object context = null) {
             if (!Enabled) return;
@@ -46,10 +47,8 @@ namespace Strix.Editor.Common {
         }
 
         /// <summary>
-        /// Formats the message by adding the calling class and method name.
+        /// Formats the message by adding the calling class and method name in color
         /// </summary>
-        /// <param name="message">The log message content.</param>
-        /// <returns>A formatted string including the script and method as context.</returns>
         private static string Format(string message, string color) {
             var frame = new StackTrace().GetFrame(2);
             var method = frame?.GetMethod();

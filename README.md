@@ -1,5 +1,5 @@
+![Strix Banner](https://i.imgur.com/cnyaUE3.png)
 # Strix
-
 **Strix** is a powerful all-in-one **Unity Editor toolkit** developed by **Midori** with **Skyveil Studios**, designed to enhance your workflow with:
 
 - ✨ Custom attributes

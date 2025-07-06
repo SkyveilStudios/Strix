@@ -16,11 +16,6 @@ namespace Strix.Editor.MSF {
         }
 
         private void OnGUI() {
-            var headerStyle = new GUIStyle(EditorStyles.boldLabel) {
-                fontSize = 14,
-                alignment = TextAnchor.MiddleCenter
-            };
-
             EditorGUILayout.Space(10);
             StrixEditorUIUtils.DrawTitle(WindowTitle);
             EditorGUILayout.Space(10);
@@ -111,9 +106,9 @@ namespace Strix.Editor.MSF {
             EditorGUILayout.EndHorizontal();
         }
 
-        private Texture2D MakeTex(int width, int height, Color col) {
+        private static Texture2D MakeTex(int width, int height, Color col) {
             var pix = new Color[width * height];
-            for (int i = 0; i < pix.Length; ++i)
+            for (var i = 0; i < pix.Length; ++i)
                 pix[i] = col;
 
             var tex = new Texture2D(width, height);

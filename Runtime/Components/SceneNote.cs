@@ -13,7 +13,6 @@ namespace Strix.Runtime.Components {
     public class SceneNote : MonoBehaviour {
         public enum NoteVisibility { Always, SelectedOnly, Hidden }
         public enum NoteCategory { Info, Warning, Design, Bug, Custom}
-
         [Header("Note Settings")] 
         [Tooltip("Should the title display in the scene view.")]
         public bool showTitle = true;

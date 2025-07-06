@@ -4,14 +4,11 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Strix.Editor.Notepad
-{
-    public static class NotepadFonts
-    {
+namespace Strix.Editor.Notepad {
+    public static class NotepadFonts {
         private static readonly string[] SearchPaths = { "Assets/Strix/Editor/Notepad/Fonts" };
 
-        public static Font LoadFont(string fontName)
-        {
+        public static Font LoadFont(string fontName) {
             var path = AssetDatabase.FindAssets("t:Font", SearchPaths)
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .FirstOrDefault(p => Path.GetFileNameWithoutExtension(p) == fontName);
@@ -23,8 +20,7 @@ namespace Strix.Editor.Notepad
             return null;
         }
 
-        public static string[] GetFontNames()
-        {
+        public static string[] GetFontNames() {
             return AssetDatabase.FindAssets("t:Font", SearchPaths)
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .Select(Path.GetFileNameWithoutExtension)

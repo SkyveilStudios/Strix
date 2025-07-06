@@ -6,10 +6,8 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Strix.Editor.Notepad
-{
-    public class NotepadModel
-    {
+namespace Strix.Editor.Notepad {
+    public class NotepadModel {
         public string Text { get; private set; } = string.Empty;
         private string FilePath { get; set; } = "NewNote";
         public bool HasUnsavedChanges { get; private set; }
@@ -20,32 +18,26 @@ namespace Strix.Editor.Notepad
         private const string PrefKey = "Strix.Notepad.LastFile";
         private bool _isProgrammaticUpdate;
 
-        public NotepadModel(INoteObserver view)
-        {
+        public NotepadModel(INoteObserver view) {
             _view = view;
         }
 
-        public void Init()
-        {
+        public void Init() {
             FilePath = EditorPrefs.GetString(PrefKey, "NewNote");
             LoadFiles();
-            
-            if (Files.Count > 0)
-            {
-                if (!Files.Contains(FilePath))
-                {
+
+            if (Files.Count > 0) {
+                if (!Files.Contains(FilePath)) {
                     FilePath = Files[0];
                     SelectedFileIndex = 0;
                 }
-                else
-                {
+                else {
                     SelectedFileIndex = Files.IndexOf(FilePath);
                 }
 
                 LoadTextFromFile();
             }
-            else
-            {
+            else {
                 Text = string.Empty;
                 SelectedFileIndex = -1;
                 FilePath = "NewNote";
@@ -53,16 +45,13 @@ namespace Strix.Editor.Notepad
             }
         }
 
-        public void SelectFileFromList(int index)
-        {
-            if (SelectedFileIndex == index)
-                return;
+        public void SelectFileFromList(int index) {
+            if (SelectedFileIndex == index) return;
 
             if (HasUnsavedChanges && EditorUtility.DisplayDialog("Unsaved Changes",
                     "You have unsaved changes. Do you want to save before discarding and changing to another file?",
                     "Yes",
-                    "No"))
-            {
+                    "No")) {
                 SaveTextToFile();
             }
 
@@ -71,10 +60,8 @@ namespace Strix.Editor.Notepad
             LoadTextFromFile();
         }
 
-        public void UpdateTextIfChanged(string newText)
-        {
+        public void UpdateTextIfChanged(string newText) {
             if (_isProgrammaticUpdate) return;
-
             if (Text == newText) return;
 
             Text = newText;
@@ -82,11 +69,9 @@ namespace Strix.Editor.Notepad
             _view.ModelUpdated();
         }
 
-        public void LoadFiles()
-        {
+        public void LoadFiles() {
             var notesFolder = Path.Combine("Assets/Strix/Editor/Notepad", "Notes");
-            if (!Directory.Exists(notesFolder))
-            {
+            if (!Directory.Exists(notesFolder)) {
                 Files.Clear();
                 Debug.LogWarning("Notes folder not found: " + notesFolder);
                 return;
@@ -97,28 +82,22 @@ namespace Strix.Editor.Notepad
                 .Select(Path.GetFileName)
                 .ToList();
 
-            if (Files.Count > 0)
-            {
+            if (Files.Count > 0) {
                 SelectedFileIndex = Files.FindIndex(x => x == FilePath);
-                if (SelectedFileIndex == -1)
-                {
+                if (SelectedFileIndex == -1) {
                     SelectedFileIndex = 0;
                     FilePath = Files[0];
                 }
             }
-            else
-            {
+            else {
                 SelectedFileIndex = -1;
                 FilePath = "NewNote";
             }
-
             _view.ModelUpdated();
         }
 
-        public void SaveTextToFile()
-        {
-            try
-            {
+        public void SaveTextToFile() {
+            try {
                 var fullPath = Path.Combine("Assets/Strix/Editor/Notepad", "Notes", FilePath);
                 File.WriteAllText(fullPath, Text);
                 AssetDatabase.Refresh();
@@ -126,21 +105,17 @@ namespace Strix.Editor.Notepad
                 _view.ModelUpdated();
                 EditorPrefs.SetString(PrefKey, FilePath);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 Debug.LogError("Failed to save Notepad: " + e.Message);
             }
         }
 
-        private void LoadTextFromFile()
-        {
-            try
-            {
+        private void LoadTextFromFile() {
+            try {
                 var fullPath = Path.Combine("Assets/Strix/Editor/Notepad", "Notes", FilePath);
-                fullPath = Path.GetFullPath(fullPath); 
-                
-                if (File.Exists(fullPath))
-                {
+                fullPath = Path.GetFullPath(fullPath);
+
+                if (File.Exists(fullPath)) {
                     _isProgrammaticUpdate = true;
                     Text = File.ReadAllText(fullPath);
                     HasUnsavedChanges = false;
@@ -148,25 +123,21 @@ namespace Strix.Editor.Notepad
                     _view.ModelUpdated();
                     _isProgrammaticUpdate = false;
                 }
-                else
-                {
+                else {
                     Debug.LogWarning("Notepad file not found: " + fullPath);
                     Text = string.Empty;
                 }
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 Debug.LogError("Failed to load Notepad: " + e.Message);
             }
         }
 
-        public void CheckForUnsavedChangesBeforeCreatingNewFile()
-        {
+        public void CheckForUnsavedChangesBeforeCreatingNewFile() {
             if (HasUnsavedChanges && EditorUtility.DisplayDialog("Unsaved Changes",
                     "You have unsaved changes. Do you want to save before creating a new file?",
                     "Yes",
-                    "No"))
-            {
+                    "No")) {
                 SaveTextToFile();
             }
 
@@ -175,22 +146,19 @@ namespace Strix.Editor.Notepad
             EditorWindow.GetWindow<NotepadWindow>().Repaint();
         }
 
-        private void CreateNewFile()
-        {
-            string newFileName = EditorUtility.SaveFilePanel(
+        private void CreateNewFile() {
+            var newFileName = EditorUtility.SaveFilePanel(
                 "Create New File",
                 Path.Combine("Assets/Strix/Editor/Notepad", "Notes"),
                 "NewNote",
                 "txt");
 
-            if (string.IsNullOrEmpty(newFileName))
-                return;
+            if (string.IsNullOrEmpty(newFileName)) return;
 
             newFileName = Path.GetFileName(newFileName);
             var fullPath = Path.Combine("Assets/Strix/Editor/Notepad", "Notes", newFileName);
 
-            if (!File.Exists(fullPath))
-            {
+            if (!File.Exists(fullPath)) {
                 File.WriteAllText(fullPath, string.Empty);
                 AssetDatabase.Refresh();
                 LoadFiles();
@@ -201,8 +169,7 @@ namespace Strix.Editor.Notepad
                 GUI.FocusControl(null);
                 _view.ModelUpdated();
             }
-            else
-            {
+            else {
                 EditorUtility.DisplayDialog(
                     "File Exists",
                     "A file with that name already exists. Please choose a different name.",
@@ -210,19 +177,16 @@ namespace Strix.Editor.Notepad
             }
         }
 
-        public void CheckForUnsavedChanges()
-        {
+        public void CheckForUnsavedChanges() {
             if (HasUnsavedChanges && EditorUtility.DisplayDialog("Unsaved Changes",
                     "You have unsaved changes. Do you want to save before discarding and changing to another file?",
                     "Yes",
-                    "No"))
-            {
+                    "No")) {
                 SaveTextToFile();
             }
         }
 
-        public void OnDestroy()
-        {
+        public void OnDestroy() {
             CheckForUnsavedChanges();
         }
     }

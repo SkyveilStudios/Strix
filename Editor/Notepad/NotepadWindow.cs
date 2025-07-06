@@ -1,13 +1,13 @@
 #if UNITY_EDITOR
 using System.IO;
 using System.Linq;
+using Strix.Editor.Common;
 using UnityEditor;
 using UnityEngine;
 
-namespace Strix.Editor.Notepad
-{
-    public class NotepadWindow : EditorWindow, INoteObserver
-    {
+namespace Strix.Editor.Notepad {
+    public class NotepadWindow : EditorWindow, INoteObserver {
+        private const string WindowTitle = "Notepad";
         [SerializeField] private int fontSize = 14;
         [SerializeField] private Vector2 scrollPosition;
 
@@ -18,14 +18,12 @@ namespace Strix.Editor.Notepad
         private Font _customFont;
 
         [MenuItem("Strix/Notepad/Window", priority = 100)]
-        public static void ShowWindow()
-        {
+        public static void ShowWindow() {
             var window = GetWindow<NotepadWindow>();
             window.titleContent = new GUIContent("Notepad", EditorGUIUtility.IconContent("d_TextAsset Icon").image);
         }
 
-        private void OnEnable()
-        {
+        private void OnEnable() {
             _model ??= new NotepadModel(this);
             _model.Init();
 
@@ -33,18 +31,16 @@ namespace Strix.Editor.Notepad
             EditorApplication.quitting += OnEditorQuitting;
         }
 
-        private void OnDisable()
-        {
+        private void OnDisable() {
             EditorApplication.quitting -= OnEditorQuitting;
         }
 
-        private void OnDestroy()
-        {
+        private void OnDestroy() {
             _model?.OnDestroy();
         }
 
-        private void OnGUI()
-        {
+        private void OnGUI() {
+            StrixEditorUIUtils.DrawTitle(WindowTitle);
             _model ??= new NotepadModel(this);
 
             HandleShortcuts();
@@ -56,19 +52,16 @@ namespace Strix.Editor.Notepad
             DrawTextArea();
         }
 
-        public void ModelUpdated()
-        {
+        public void ModelUpdated() {
             UpdateWindowTitle();
             Repaint();
         }
 
-        private void UpdateWindowTitle()
-        {
+        private void UpdateWindowTitle() {
             titleContent.text = "Notepad" + (_model.HasUnsavedChanges ? " *" : "");
         }
 
-        private void DrawToolbar()
-        {
+        private void DrawToolbar() {
             EditorGUILayout.BeginHorizontal();
 
             GUILayout.Label("Select File:");
@@ -84,28 +77,24 @@ namespace Strix.Editor.Notepad
             EditorGUILayout.EndHorizontal();
         }
 
-        private void DrawFontControls()
-        {
+        private void DrawFontControls() {
             EditorGUILayout.BeginHorizontal();
             GUILayout.Label("Font Size:");
             fontSize = EditorGUILayout.IntSlider(fontSize, 10, 30);
             EditorGUILayout.EndHorizontal();
         }
 
-        private void DrawTextArea()
-        {
+        private void DrawTextArea() {
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             var newText = EditorGUILayout.TextArea(_model.Text, _textAreaStyle, GUILayout.ExpandHeight(true));
             EditorGUILayout.EndScrollView();
             _model.UpdateTextIfChanged(newText);
         }
 
-        private void LoadFont()
-        {
+        private void LoadFont() {
             if (!_settings) return;
 
-            if (_settings.useCustomFont)
-            {
+            if (_settings.useCustomFont) {
                 var fontPath = AssetDatabase.FindAssets("t:Font", new[] { "Assets/Strix/Editor/Notepad/Fonts" })
                     .Select(AssetDatabase.GUIDToAssetPath)
                     .FirstOrDefault(path => Path.GetFileNameWithoutExtension(path) == _settings.selectedFont);
@@ -122,36 +111,29 @@ namespace Strix.Editor.Notepad
             );
         }
 
-        private void SetupStyles()
-        {
+        private void SetupStyles() {
             _buttonStyle = NotepadStyles.CreateMiniButtonStyle();
         }
 
-        private void HandleShortcuts()
-        {
+        private void HandleShortcuts() {
             var e = Event.current;
             if (e.type != EventType.KeyDown || (!e.control && !e.command) || e.keyCode != KeyCode.S) return;
             e.Use();
             _model.SaveTextToFile();
         }
 
-        private void OnEditorQuitting()
-        {
+        private void OnEditorQuitting() {
             _model?.CheckForUnsavedChanges();
         }
 
-        private void LoadSettings()
-        {
+        private void LoadSettings() {
             _settings = AssetDatabase.LoadAssetAtPath<NotepadSettings>("Assets/Strix/Editor/Notepad/Settings/NotepadSettings.asset");
-            if (!_settings)
-            {
-                _settings = CreateInstance<NotepadSettings>();
-                AssetDatabase.CreateAsset(_settings, "Assets/Strix/Editor/Notepad/Settings/NotepadSettings.asset");
-                AssetDatabase.SaveAssets();
-                Debug.Log("Created new NotepadSettings asset at: " + "Assets/Strix/Editor/Notepad/Settings/NotepadSettings.asset");
-            }
+            if (_settings) return;
+            _settings = CreateInstance<NotepadSettings>();
+            AssetDatabase.CreateAsset(_settings, "Assets/Strix/Editor/Notepad/Settings/NotepadSettings.asset");
+            AssetDatabase.SaveAssets();
+            Debug.Log("Created new NotepadSettings asset at: " + "Assets/Strix/Editor/Notepad/Settings/NotepadSettings.asset");
         }
-
     }
 }
 #endif

@@ -4,37 +4,30 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace Strix.Editor.Notepad
-{
-    public class NotepadSettingsEditor : EditorWindow
-    {
+namespace Strix.Editor.Notepad {
+    public class NotepadSettingsEditor : EditorWindow {
         private NotepadSettings _settings;
         private string[] _fontOptions;
         private int _selectedFontIndex;
 
         [MenuItem("Strix/Notepad/Settings", priority = 101)]
-        public static void ShowWindow()
-        {
+        public static void ShowWindow() {
             GetWindow<NotepadSettingsEditor>("Notepad Settings");
         }
 
-        private void OnEnable()
-        {
+        private void OnEnable() {
             LoadSettings();
             LoadFonts();
         }
 
-        private void OnGUI()
-        {
+        private void OnGUI() {
             EditorGUILayout.Space();
             GUILayout.Label("Notepad Settings", EditorStyles.boldLabel);
 
             _settings = (NotepadSettings)EditorGUILayout.ObjectField("Settings Asset", _settings, typeof(NotepadSettings), false);
 
-            if (!_settings)
-            {
-                EditorGUILayout.HelpBox("No NotepadSettings asset found.", MessageType.Warning);
-                return;
+            if (!_settings) {
+                EditorGUILayout.HelpBox("No NotepadSettings asset found.", MessageType.Warning); return;
             }
 
             EditorGUILayout.Space();
@@ -48,13 +41,11 @@ namespace Strix.Editor.Notepad
             GUILayout.Label("Font", EditorStyles.boldLabel);
             EditorGUILayout.BeginVertical("box");
 
-            if (_fontOptions is { Length: > 0 })
-            {
+            if (_fontOptions is { Length: > 0 }) {
                 _selectedFontIndex = EditorGUILayout.Popup("Font Name", _selectedFontIndex, _fontOptions);
                 _settings.selectedFont = _fontOptions[_selectedFontIndex];
             }
-            else
-            {
+            else {
                 EditorGUILayout.HelpBox("No fonts found in the Notepad Fonts folder.", MessageType.Warning);
             }
 
@@ -68,8 +59,7 @@ namespace Strix.Editor.Notepad
             AssetDatabase.SaveAssets();
         }
 
-        private void LoadSettings()
-        {
+        private void LoadSettings() {
             _settings = AssetDatabase.LoadAssetAtPath<NotepadSettings>("Assets/Strix/Editor/Notepad/Settings/NotepadSettings.asset");
             if (_settings) return;
             _settings = CreateInstance<NotepadSettings>();
@@ -77,8 +67,7 @@ namespace Strix.Editor.Notepad
             AssetDatabase.SaveAssets();
         }
 
-        private void LoadFonts()
-        {
+        private void LoadFonts() {
             var fontPaths = AssetDatabase.FindAssets("t:Font", new[] { "Assets/Strix/Editor/Notepad/Fonts" })
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .ToArray();
@@ -88,7 +77,6 @@ namespace Strix.Editor.Notepad
             if (_selectedFontIndex == -1) _selectedFontIndex = 0;
             if (_fontOptions.Length == 0) _selectedFontIndex = -1;
         }
-
     }
 }
 #endif

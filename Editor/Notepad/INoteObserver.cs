@@ -1,8 +1,6 @@
 ﻿#if UNITY_EDITOR
-namespace Strix.Editor.Notepad
-{
-    public interface INoteObserver
-    {
+namespace Strix.Editor.Notepad {
+    public interface INoteObserver {
         void ModelUpdated();
     }
 }

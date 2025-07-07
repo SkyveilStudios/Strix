@@ -5,7 +5,7 @@ using Strix.Runtime.Attributes;
 
 namespace Strix.Editor.Drawers {
     [CustomPropertyDrawer(typeof(ImagePreviewAttribute))]
-    public class ImagePreviewDrawer : PropertyDrawer {
+    public class ImagePreviewDrawer : DecoratorDrawer {
         private Texture2D _cachedTexture;
         private string _cachedPath;
 
@@ -18,7 +18,7 @@ namespace Strix.Editor.Drawers {
             return _cachedTexture;
         }
 
-        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+        public override void OnGUI(Rect position) {
             var attr = (ImagePreviewAttribute)attribute;
 
             if (string.IsNullOrEmpty(attr.Path)) {
@@ -56,7 +56,7 @@ namespace Strix.Editor.Drawers {
             EditorGUI.DrawPreviewTexture(rect, texture, null, ScaleMode.ScaleToFit);
         }
 
-        public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
+        public override float GetHeight() {
             var attr = (ImagePreviewAttribute)attribute;
             var texture = GetTexture(attr.Path);
 

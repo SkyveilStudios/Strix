@@ -12,23 +12,34 @@ namespace Strix.Editor.Common {
     /// Supports highlighting the context, colors, and global toggle, and optional file logging
     /// </summary>
     public static class StrixLogger {
-        private const string EditorPrefKey = "Strix.Logging.Enabled";
+        private const string LoggerPrefKey = "Strix.Logging.Enabled";
+        private const string LogInfoPrefKey = "Strix.Logging.Info";
+        private const string LogWarnPrefKey = "Strix.Logging.Warn";
+        private const string LogErrorPrefKey = "Strix.Logging.Error";
         private const string LogFilePath = "Assets/StrixLog.txt";
 
         /// <summary>
         /// Global toggle to enable or disable all logging
         /// </summary>
-        private static bool Enabled { get; set; }
+        private static bool LoggerEnabled { get; set; }
+        private static bool LogInfoEnabled { get; set; }
+        private static bool LogWarnEnabled { get; set; }
+        private static bool LogErrorEnabled { get; set; }
+        
 
         static StrixLogger() {
-            Enabled = EditorPrefs.GetBool(EditorPrefKey, true);
+            LoggerEnabled = EditorPrefs.GetBool(LoggerPrefKey, true);
+            LogInfoEnabled = EditorPrefs.GetBool(LogInfoPrefKey, true);
+            LogWarnEnabled = EditorPrefs.GetBool(LogWarnPrefKey, true);
+            LogErrorEnabled = EditorPrefs.GetBool(LogErrorPrefKey, true);
         }
         
         /// <summary>
         /// Logs an information message to the console with optional context
         /// </summary>
         public static void Log(string message, Object context = null) {
-            if (!Enabled) return;
+            if (!LoggerEnabled) return;
+            if (!LogInfoEnabled) return;
             Debug.Log(Format(message, "white"), context);
         }
 
@@ -36,7 +47,8 @@ namespace Strix.Editor.Common {
         /// Logs a warning message to the console with optional context
         /// </summary>
         public static void LogWarning(string message, Object context = null) {
-            if (!Enabled) return;
+            if (!LoggerEnabled) return;
+            if (!LogWarnEnabled) return;
             Debug.LogWarning(Format(message, "yellow"), context);
         }
 
@@ -44,7 +56,8 @@ namespace Strix.Editor.Common {
         /// Logs an error message to the console with optional context
         /// </summary>
         public static void LogError(string message, Object context = null) {
-            if (!Enabled) return;
+            if (!LoggerEnabled) return;
+            if (!LogErrorEnabled) return;
             Debug.LogError(Format(message, "red"), context);
         }
 
@@ -52,7 +65,7 @@ namespace Strix.Editor.Common {
         /// Logs a message to both the console and a file with timestamps
         /// </summary>
         public static void LogToFile(string message, LogType type = LogType.Log, Object context = null) {
-            if (!Enabled) return;
+            if (!LoggerEnabled) return;
 
             var color = type switch {
                 LogType.Error => "red",
@@ -117,21 +130,6 @@ namespace Strix.Editor.Common {
             } catch (IOException ex) {
                 Debug.LogError($"<b>[StrixLogger]</b> Failed to write to log file: {ex.Message}");
             }
-        }
-
-        /// <summary>
-        /// Unity Menu Integration
-        /// </summary>
-        [MenuItem("Strix/Logging/Enable Logging", priority = 100)]
-        private static void ToggleLogging() {
-            Enabled = !Enabled;
-            EditorPrefs.SetBool(EditorPrefKey, Enabled);
-        }
-
-        [MenuItem("Strix/Logging/Enable Logging", true)]
-        private static bool ToggleLoggingValidate() {
-            Menu.SetChecked("Strix/Logging/Enable Logging", Enabled);
-            return true;
         }
     }
 }

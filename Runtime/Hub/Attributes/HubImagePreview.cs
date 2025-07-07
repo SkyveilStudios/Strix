@@ -1,7 +1,7 @@
 ﻿using Strix.Runtime.Attributes;
 using UnityEngine;
 
-namespace Strix.Editor.Hub.Dummy {
+namespace Strix.Runtime.Hub.Attributes {
     public class HubImagePreview : MonoBehaviour
     {
         [ImagePreview("Assets/Strix/Banners/StrixBanner.jpg", 400f)]

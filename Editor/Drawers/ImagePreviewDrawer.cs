@@ -43,7 +43,7 @@ namespace Strix.Editor.Drawers {
                         x += (position.width - maxWidth) / 2f;
                         break;
                     case ImageAlignment.Right:
-                        x += (position.width - maxWidth);
+                        x += position.width - maxWidth;
                         break;
                     case ImageAlignment.Left:
                         break;

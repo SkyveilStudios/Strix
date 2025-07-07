@@ -1,5 +1,4 @@
-﻿using System;
-using Strix.Runtime.Components;
+﻿using Strix.Runtime.Components;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -19,44 +18,33 @@ namespace Strix.Editor.Hub {
         private static Vector2 _scroll;
 
         private static ComponentType _selectedComponent = ComponentType.AudioSourcePreview;
-        
-        public static void DrawComponentsTab()
-        {
+
+        public static void DrawComponentsTab() {
             EditorGUILayout.BeginHorizontal();
-            
+
             EditorGUILayout.BeginVertical(GUILayout.Width(200), GUILayout.ExpandHeight(true));
             DrawComponentList();
             EditorGUILayout.EndVertical();
-            
+
             EditorGUILayout.BeginVertical(GUILayout.ExpandHeight(true));
-            DrawSectionHeader("Description");
+            HubTabUtils.DrawHeader("Description");
             DrawDescription();
 
-            DrawSeparator();
-            
+            HubTabUtils.DrawSeparator();
+            HubTabUtils.DrawHeader("Preview");
             DrawPreview();
 
             EditorGUILayout.EndVertical();
 
             EditorGUILayout.EndHorizontal();
         }
-        
-        private static void DrawComponentList()
-        {
+
+        private static void DrawComponentList() {
             EditorGUILayout.BeginVertical(GUILayout.Width(200), GUILayout.ExpandHeight(true));
-            
-            GUILayout.Space(0);
-            var bgRect = GUILayoutUtility.GetLastRect();
-            if (Event.current.type == EventType.Repaint)
-                EditorGUI.DrawRect(new Rect(bgRect.x, bgRect.y, 200, Screen.height), new Color(0.20f, 0.20f, 0.20f));
+            HubTabUtils.DrawSidePanelBackground(200);
 
-            _scroll = GUILayout.BeginScrollView(
-                _scroll,
-                GUIStyle.none,
-                GUI.skin.verticalScrollbar
-            );
+            _scroll = GUILayout.BeginScrollView(_scroll, GUIStyle.none, GUI.skin.verticalScrollbar);
 
-            
             var labelStyle = new GUIStyle(EditorStyles.boldLabel) {
                 fontSize = 14,
                 fontStyle = FontStyle.Bold,
@@ -64,7 +52,7 @@ namespace Strix.Editor.Hub {
                 fixedHeight = 32,
                 padding = new RectOffset(0, 0, -15, 0)
             };
-            
+
             EditorGUILayout.LabelField("Components", labelStyle, GUILayout.ExpandWidth(true));
             var lineRect = GUILayoutUtility.GetRect(1, 2, GUILayout.ExpandWidth(true));
             EditorGUI.DrawRect(lineRect, new Color(0.7f, 0.7f, 0.7f));
@@ -76,7 +64,7 @@ namespace Strix.Editor.Hub {
             GUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
         }
-        
+
         private static void DrawComponentButton(string label, ComponentType type) {
             var isSelected = _selectedComponent == type;
 
@@ -89,15 +77,15 @@ namespace Strix.Editor.Hub {
                 padding = new RectOffset(10, 10, 0, 0),
                 border = new RectOffset(0, 0, 0, 0),
                 normal = {
-                    background = MakeTex(1, 1, isSelected ? new Color(0.30f, 0.48f, 0.55f) : new Color(0.15f, 0.15f, 0.15f)),
+                    background = HubTabUtils.MakeTex(1, 1, isSelected ? new Color(0.30f, 0.48f, 0.55f) : new Color(0.15f, 0.15f, 0.15f)),
                     textColor = isSelected ? Color.white : Color.gray
                 },
                 hover = {
-                    background = MakeTex(1, 1, isSelected ? new Color(0.30f, 0.48f, 0.55f) : new Color(0.25f, 0.25f, 0.25f)),
+                    background = HubTabUtils.MakeTex(1, 1, isSelected ? new Color(0.30f, 0.48f, 0.55f) : new Color(0.25f, 0.25f, 0.25f)),
                     textColor = Color.white
                 },
                 active = {
-                    background = MakeTex(1, 1, new Color(0.30f, 0.48f, 0.55f)),
+                    background = HubTabUtils.MakeTex(1, 1, new Color(0.30f, 0.48f, 0.55f)),
                     textColor = Color.white
                 }
             };
@@ -107,32 +95,8 @@ namespace Strix.Editor.Hub {
             }
         }
 
-        private static Texture2D MakeTex(int width, int height, Color col) {
-            var pix = new Color[width * height];
-            for (var i = 0; i < pix.Length; ++i)
-                pix[i] = col;
-
-            var result = new Texture2D(width, height);
-            result.SetPixels(pix);
-            result.Apply();
-            return result;
-        }
-        
-        private static void DrawSectionHeader(string title) {
-            EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
-        }
-        
-        private static void DrawSeparator()
-        {
-            var rect = GUILayoutUtility.GetRect(1, 1, GUILayout.ExpandWidth(true));
-            EditorGUI.DrawRect(rect, new Color(0.3f, 0.3f, 0.3f, 1f));
-            GUILayout.Space(4);
-        }
-        
-        private static void DrawDescription()
-        {
-            var description = _selectedComponent switch
-            {
+        private static void DrawDescription() {
+            var description = _selectedComponent switch {
                 ComponentType.AudioSourcePreview => "Allows you to preview audio clips directly in the editor without entering Play Mode.",
                 ComponentType.SceneNote => "Adds developer notes directly into your scene view to help communicate intent or reminders.",
                 ComponentType.TransformLock => "Locks transform changes to prevent accidental editing in the Unity Editor.",
@@ -147,103 +111,63 @@ namespace Strix.Editor.Hub {
         private static void DrawPreview() {
             switch (_selectedComponent) {
                 case ComponentType.AudioSourcePreview:
-                    DrawAudioSourcePreview();
+                    EnsureAudioSourcePreview();
+                    DrawEditorPreview(_audioSourceInstance);
                     break;
                 case ComponentType.SceneNote:
-                    DrawSceneNotePreview();
+                    EnsureSceneNotePreview();
+                    DrawEditorPreview(_sceneNoteInstance);
                     break;
                 case ComponentType.TransformLock:
-                    DrawTransformLockPreview();
+                    EnsureTransformLockPreview();
+                    DrawEditorPreview(_transformLockInstance);
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
         }
 
-        private static void DrawAudioSourcePreview() {
-            CheckAudioPreview();
-            if (!_audioSourceInstance) {
+        private static void DrawEditorPreview(Object instance) {
+            if (!instance) {
                 EditorGUILayout.HelpBox("Unable to create preview", MessageType.Error);
                 return;
             }
-            
-            UnityEditor.Editor.CreateCachedEditor(_audioSourceInstance, null, ref _previewEditor);
+
+            UnityEditor.Editor.CreateCachedEditor(instance, null, ref _previewEditor);
             _previewEditor?.OnInspectorGUI();
         }
 
-        private static void DrawSceneNotePreview() {
-            CheckSceneNotePreview();
-            if (!_sceneNoteInstance) {
-                EditorGUILayout.HelpBox("Unable to create preview", MessageType.Error);
-                return;
-            }
-            
-            UnityEditor.Editor.CreateCachedEditor(_sceneNoteInstance, null, ref _previewEditor);
-            _previewEditor?.OnInspectorGUI();
-        }
-        
-        private static void DrawTransformLockPreview() {
-            CheckTransformLockPreview();
-            if (!_transformLockInstance) {
-                EditorGUILayout.HelpBox("Unable to create preview", MessageType.Error);
-                return;
-            }
-            
-            UnityEditor.Editor.CreateCachedEditor(_transformLockInstance, null, ref _previewEditor);
-            _previewEditor?.OnInspectorGUI();
-        }
-        
-        private static void CheckTransformLockPreview() {
-            if (_transformLockInstance) return;
-            
-            var go = GameObject.Find("StrixPreview") ?? new GameObject("StrixPreview") {
-                hideFlags = HideFlags.HideAndDontSave
-            };
-
-            if (!go.TryGetComponent(out _transformLockInstance)) {
-                _transformLockInstance = go.AddComponent<TransformLock>();
-            }
-        }
-
-        private static void CheckSceneNotePreview() {
-            if (_sceneNoteInstance) return;
-            
-            var go = GameObject.Find("StrixPreview") ?? new GameObject("StrixPreview") {
-                hideFlags = HideFlags.HideAndDontSave
-            };
-
-            if (!go.TryGetComponent(out _sceneNoteInstance)) {
-                _sceneNoteInstance = go.AddComponent<SceneNote>();
-            }
-        }
-
-        private static void CheckAudioPreview() {
+        private static void EnsureAudioSourcePreview() {
             if (_audioSourceInstance) return;
-
-            var go = GameObject.Find("StrixPreview") ?? new GameObject("StrixPreview") {
-                hideFlags = HideFlags.HideAndDontSave
-            };
-            
-            if (!go.TryGetComponent(out _audioSourceInstance)) {
+            var go = HubTabUtils.CreateOrGetPreviewGo();
+            if (!go.TryGetComponent(out _audioSourceInstance))
                 _audioSourceInstance = go.AddComponent<AudioSourcePreview>();
-            }
 
-            if (!go.TryGetComponent(out AudioSource source)) {
+            if (!go.TryGetComponent(out AudioSource source))
                 source = go.AddComponent<AudioSource>();
-            }
-            
+
             source.playOnAwake = false;
             source.volume = 0.3f;
 
-            const string audioClipPath = "Assets/Strix/Editor/Components/AudioSourcePreview/Real Pianos - Defeat.wav";
-            var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(audioClipPath);
-            if (clip) {
-                source.clip = clip;
-            }
+            const string path = "Assets/Strix/Editor/Components/AudioSourcePreview/Real Pianos - Defeat.wav";
+            var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
+            if (clip) source.clip = clip;
+        }
+
+        private static void EnsureSceneNotePreview() {
+            if (_sceneNoteInstance) return;
+            var go = HubTabUtils.CreateOrGetPreviewGo();
+            if (!go.TryGetComponent(out _sceneNoteInstance))
+                _sceneNoteInstance = go.AddComponent<SceneNote>();
+        }
+
+        private static void EnsureTransformLockPreview() {
+            if (_transformLockInstance) return;
+            var go = HubTabUtils.CreateOrGetPreviewGo();
+            if (!go.TryGetComponent(out _transformLockInstance))
+                _transformLockInstance = go.AddComponent<TransformLock>();
         }
 
         [InitializeOnLoadMethod]
-        private static void DeletePreview() {
+        private static void CleanupPreviewObjects() {
             EditorApplication.quitting += () => {
                 if (_audioSourceInstance)
                     Object.DestroyImmediate(_audioSourceInstance.gameObject);

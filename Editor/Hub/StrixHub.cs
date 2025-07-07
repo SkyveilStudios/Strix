@@ -1,5 +1,5 @@
 ﻿using System;
-using Strix.Editor.Utilities;
+using Strix.Editor.Common;
 using UnityEditor;
 using UnityEngine;
 

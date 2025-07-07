@@ -29,6 +29,7 @@ namespace Strix.Editor.Hub {
             if (GUILayout.Button("Open Notepad")) EditorApplication.ExecuteMenuItem("Strix/Notepad/Window");
             if (GUILayout.Button("Open Task Board")) EditorApplication.ExecuteMenuItem("Strix/Task Board");
             if (GUILayout.Button("Open Missing Script Finder")) EditorApplication.ExecuteMenuItem("Strix/Missing Script Finder");
+            if (GUILayout.Button("Open Icon Browser")) EditorApplication.ExecuteMenuItem("Strix/Icon Browser");
         }
 
         private static void DrawSettings() {

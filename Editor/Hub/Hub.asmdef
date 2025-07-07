@@ -2,7 +2,8 @@
     "name": "Strix.Hub",
     "rootNamespace": "",
     "references": [
-        "GUID:68c5eebe128d1fc44929dfc6fe6d008b"
+        "GUID:68c5eebe128d1fc44929dfc6fe6d008b",
+        "GUID:6e7fc0a322153834b9ca2561f442442e"
     ],
     "includePlatforms": [
         "Editor"

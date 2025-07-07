@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Strix.Editor.Utilities {
+namespace Strix.Editor.Common {
     public enum ImageAlignment {
         Left,
         Center,

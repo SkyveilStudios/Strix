@@ -16,6 +16,7 @@ namespace Strix.Editor.Hub {
         private static SceneNote _sceneNoteInstance;
         private static TransformLock _transformLockInstance;
         private static UnityEditor.Editor _previewEditor;
+        private static Vector2 _scroll;
 
         private static ComponentType _selectedComponent = ComponentType.AudioSourcePreview;
         
@@ -23,11 +24,12 @@ namespace Strix.Editor.Hub {
         {
             EditorGUILayout.BeginHorizontal();
             
-            EditorGUILayout.BeginVertical(GUILayout.Width(150), GUILayout.ExpandHeight(true));
+            EditorGUILayout.BeginVertical(GUILayout.Width(200), GUILayout.ExpandHeight(true));
             DrawComponentList();
             EditorGUILayout.EndVertical();
             
             EditorGUILayout.BeginVertical(GUILayout.ExpandHeight(true));
+            DrawSectionHeader("Description");
             DrawDescription();
 
             DrawSeparator();
@@ -41,19 +43,83 @@ namespace Strix.Editor.Hub {
         
         private static void DrawComponentList()
         {
-            EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField("Components", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical(GUILayout.Width(200), GUILayout.ExpandHeight(true));
+            
+            GUILayout.Space(0);
+            var bgRect = GUILayoutUtility.GetLastRect();
+            if (Event.current.type == EventType.Repaint)
+                EditorGUI.DrawRect(new Rect(bgRect.x, bgRect.y, 200, Screen.height), new Color(0.20f, 0.20f, 0.20f));
 
-            if (GUILayout.Button("AudioSourcePreview"))
-                _selectedComponent = ComponentType.AudioSourcePreview;
+            _scroll = GUILayout.BeginScrollView(
+                _scroll,
+                GUIStyle.none,
+                GUI.skin.verticalScrollbar
+            );
 
-            if (GUILayout.Button("SceneNote"))
-                _selectedComponent = ComponentType.SceneNote;
+            
+            var labelStyle = new GUIStyle(EditorStyles.boldLabel) {
+                fontSize = 14,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter,
+                fixedHeight = 32,
+                padding = new RectOffset(0, 0, -15, 0)
+            };
+            
+            EditorGUILayout.LabelField("Components", labelStyle, GUILayout.ExpandWidth(true));
+            var lineRect = GUILayoutUtility.GetRect(1, 2, GUILayout.ExpandWidth(true));
+            EditorGUI.DrawRect(lineRect, new Color(0.7f, 0.7f, 0.7f));
 
-            if (GUILayout.Button("TransformLock"))
-                _selectedComponent = ComponentType.TransformLock;
+            DrawComponentButton("AudioSourcePreview", ComponentType.AudioSourcePreview);
+            DrawComponentButton("SceneNote", ComponentType.SceneNote);
+            DrawComponentButton("TransformLock", ComponentType.TransformLock);
 
+            GUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
+        }
+        
+        private static void DrawComponentButton(string label, ComponentType type) {
+            var isSelected = _selectedComponent == type;
+
+            var style = new GUIStyle(GUI.skin.button) {
+                alignment = TextAnchor.MiddleCenter,
+                fixedHeight = 30,
+                fontSize = 12,
+                fontStyle = FontStyle.Bold,
+                margin = new RectOffset(0, 0, 0, 0),
+                padding = new RectOffset(10, 10, 0, 0),
+                border = new RectOffset(0, 0, 0, 0),
+                normal = {
+                    background = MakeTex(1, 1, isSelected ? new Color(0.30f, 0.48f, 0.55f) : new Color(0.15f, 0.15f, 0.15f)),
+                    textColor = isSelected ? Color.white : Color.gray
+                },
+                hover = {
+                    background = MakeTex(1, 1, isSelected ? new Color(0.30f, 0.48f, 0.55f) : new Color(0.25f, 0.25f, 0.25f)),
+                    textColor = Color.white
+                },
+                active = {
+                    background = MakeTex(1, 1, new Color(0.30f, 0.48f, 0.55f)),
+                    textColor = Color.white
+                }
+            };
+
+            if (GUILayout.Button(label, style, GUILayout.ExpandWidth(true), GUILayout.Width(200))) {
+                _selectedComponent = type;
+            }
+        }
+
+        private static Texture2D MakeTex(int width, int height, Color col) {
+            var pix = new Color[width * height];
+            for (var i = 0; i < pix.Length; ++i)
+                pix[i] = col;
+
+            var result = new Texture2D(width, height);
+            result.SetPixels(pix);
+            result.Apply();
+            return result;
+        }
+        
+        private static void DrawSectionHeader(string title) {
+            EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
         }
         
         private static void DrawSeparator()
@@ -65,14 +131,7 @@ namespace Strix.Editor.Hub {
         
         private static void DrawDescription()
         {
-            string title = _selectedComponent switch
-            {
-                ComponentType.AudioSourcePreview => "AudioSource Preview:",
-                ComponentType.SceneNote => "Scene Note:",
-                ComponentType.TransformLock => "TransformLock:",
-                _ => "No title available:"
-            };
-            string description = _selectedComponent switch
+            var description = _selectedComponent switch
             {
                 ComponentType.AudioSourcePreview => "Allows you to preview audio clips directly in the editor without entering Play Mode.",
                 ComponentType.SceneNote => "Adds developer notes directly into your scene view to help communicate intent or reminders.",
@@ -81,7 +140,6 @@ namespace Strix.Editor.Hub {
             };
 
             EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
             EditorGUILayout.LabelField(description);
             EditorGUILayout.EndVertical();
         }

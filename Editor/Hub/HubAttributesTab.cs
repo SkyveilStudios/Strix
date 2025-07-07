@@ -14,16 +14,17 @@ namespace Strix.Editor.Hub {
         private static HubImagePreview _imagePreviewInstance;
         private static HubRequired _requiredInstance;
         private static UnityEditor.Editor _previewEditor;
+        private static Vector2 _scroll;
 
         private static AttributeType _selectedAttribute = AttributeType.ImagePreview;
 
         public static void DrawAttributesTab() {
             EditorGUILayout.BeginHorizontal();
-
-            EditorGUILayout.BeginVertical(GUILayout.Width(150), GUILayout.ExpandHeight(true));
+            
+            EditorGUILayout.BeginVertical(GUILayout.Width(200), GUILayout.ExpandHeight(true));
             DrawAttributeList();
             EditorGUILayout.EndVertical();
-
+            
             EditorGUILayout.BeginVertical(GUILayout.ExpandHeight(true));
             DrawSectionHeader("Description");
             DrawDescription();
@@ -44,16 +45,79 @@ namespace Strix.Editor.Hub {
         }
 
         private static void DrawAttributeList() {
-            EditorGUILayout.BeginVertical("box");
-            EditorGUILayout.LabelField("Attributes", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical(GUILayout.Width(200), GUILayout.ExpandHeight(true));
 
-            if (GUILayout.Button("ImagePreview"))
-                _selectedAttribute = AttributeType.ImagePreview;
+            GUILayout.Space(0);
+            var bgRect = GUILayoutUtility.GetLastRect();
+            if (Event.current.type == EventType.Repaint)
+                EditorGUI.DrawRect(new Rect(bgRect.x, bgRect.y, 200, Screen.height), new Color(0.20f, 0.20f, 0.20f));
+
+            _scroll = GUILayout.BeginScrollView(
+                _scroll,
+                GUIStyle.none,
+                GUI.skin.verticalScrollbar
+            );
+
             
-            if (GUILayout.Button("Required"))
-                _selectedAttribute = AttributeType.Required;
+            var labelStyle = new GUIStyle(EditorStyles.boldLabel) {
+                fontSize = 14,
+                fontStyle = FontStyle.Bold,
+                alignment = TextAnchor.MiddleCenter,
+                fixedHeight = 32,
+                padding = new RectOffset(0, 0, -15, 0)
+            };
 
+            EditorGUILayout.LabelField("Attributes", labelStyle, GUILayout.ExpandWidth(true));
+            
+            var lineRect = GUILayoutUtility.GetRect(1, 2, GUILayout.ExpandWidth(true));
+            EditorGUI.DrawRect(lineRect, new Color(0.7f, 0.7f, 0.7f));
+            
+            DrawAttributeButton("ImagePreview", AttributeType.ImagePreview);
+            DrawAttributeButton("Required", AttributeType.Required);
+            
+            GUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
+        }
+
+        private static void DrawAttributeButton(string label, AttributeType type) {
+            var isSelected = _selectedAttribute == type;
+
+            var style = new GUIStyle(GUI.skin.button) {
+                alignment = TextAnchor.MiddleCenter,
+                fixedHeight = 30,
+                fontSize = 12,
+                fontStyle = FontStyle.Bold,
+                margin = new RectOffset(0, 0, 0, 0),
+                padding = new RectOffset(10, 10, 0, 0),
+                border = new RectOffset(0, 0, 0, 0),
+                normal = {
+                    background = MakeTex(1, 1, isSelected ? new Color(0.30f, 0.48f, 0.55f) : new Color(0.15f, 0.15f, 0.15f)),
+                    textColor = isSelected ? Color.white : Color.gray
+                },
+                hover = {
+                    background = MakeTex(1, 1, isSelected ? new Color(0.30f, 0.48f, 0.55f) : new Color(0.25f, 0.25f, 0.25f)),
+                    textColor = Color.white
+                },
+                active = {
+                    background = MakeTex(1, 1, new Color(0.30f, 0.48f, 0.55f)),
+                    textColor = Color.white
+                }
+            };
+
+            if (GUILayout.Button(label, style, GUILayout.ExpandWidth(true), GUILayout.Width(200))) {
+                _selectedAttribute = type;
+            }
+        }
+
+        private static Texture2D MakeTex(int width, int height, Color col) {
+            var pix = new Color[width * height];
+            for (var i = 0; i < pix.Length; ++i)
+                pix[i] = col;
+
+            var result = new Texture2D(width, height);
+            result.SetPixels(pix);
+            result.Apply();
+            return result;
         }
 
         private static void DrawSectionHeader(string title) {
@@ -67,7 +131,7 @@ namespace Strix.Editor.Hub {
         }
 
         private static void DrawDescription() {
-            string description = _selectedAttribute switch {
+             var description = _selectedAttribute switch {
                 AttributeType.ImagePreview =>
                     "Allows you to embed a custom image directly above a field in the inspector.\n\n" +
                     "<b>Parameters:</b>\n" +

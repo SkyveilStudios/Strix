@@ -2,7 +2,8 @@
     "name": "Strix.Drawers",
     "rootNamespace": "",
     "references": [
-        "GUID:68c5eebe128d1fc44929dfc6fe6d008b"
+        "GUID:68c5eebe128d1fc44929dfc6fe6d008b",
+        "GUID:c4ed78cd4cb16494c95ef4f93a6e53f3"
     ],
     "includePlatforms": [
         "Editor"

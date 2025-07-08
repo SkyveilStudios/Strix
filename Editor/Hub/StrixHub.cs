@@ -80,9 +80,9 @@ namespace Strix.Editor.Hub {
             var leftRect = new Rect(rect.x + padding, rect.y + verticalOffset, leftSize.x, labelHeight);
             GUI.Label(leftRect, "Copyright © 2025 SkyveilStudios. All rights reserved.", labelStyle);
             
-            var versionSize = labelStyle.CalcSize(new GUIContent("Version 0.1.0"));
+            var versionSize = labelStyle.CalcSize(new GUIContent("Version 0.1.4"));
             var rightRect = new Rect(rect.xMax - versionSize.x - padding, rect.y + verticalOffset, versionSize.x, labelHeight);
-            GUI.Label(rightRect, "Version 0.1.0", labelStyle);
+            GUI.Label(rightRect, "Version 0.1.4", labelStyle);
         }
 
         private static void DrawDescriptionBar()

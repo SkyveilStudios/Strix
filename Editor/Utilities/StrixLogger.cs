@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace Strix.Editor.Common {
+namespace Strix.Editor.Utilities {
     /// <summary>
     /// Formatted logging utility for debug output.
     /// Provides methods for logging information, warning, and server messages

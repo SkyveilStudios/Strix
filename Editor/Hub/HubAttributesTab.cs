@@ -30,7 +30,7 @@ namespace Strix.Editor.Hub {
             }, {
                 AttributeType.Required, new AttributeData {
                     Label = "Required",
-                    Description = "Displays a warning when a GameObject is missing or null.",
+                    Description = "Displays a warning when a field is missing or null.",
                     CodeExample = "[Required]\n[SerializeField] public GameObject obj;",
                     EnsureInstance = () => EnsureInstance(ref _requiredInstance, typeof(HubRequired))
                 }

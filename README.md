@@ -17,6 +17,7 @@
 
 ## ✅ Current Features
 ### 🧭 Project Tools
+- **Update Checker** - Checks for the latest Strix Version and downloads updates from Github
 - **Project Stats** – Analyze project structure, file types, asset sizes, and more
 - **Missing Script Finder** – Scan for and locate GameObjects with missing script references
 - **Icon Browser** – Browse and preview Unity’s internal editor icons for UI development
@@ -26,6 +27,9 @@
 ### 🧬 Attributes
 Enhance your inspector experience with these custom attributes:
 - `[ImagePreview]` – Show static images in the Inspector with optional sizing and alignment
+- `[Required]` - Displays a warning when a field is missing or null
+- `[ReadOnly]` - Displays fields grayed out and uneditable in the inspector
+- `[HelpBox]` - Displays a help box above a field in the inspector
 - More coming soon...
 
 ### 🧱 Components
@@ -37,6 +41,7 @@ Reusable and editor-friendly components to aid development:
 
 ### 🧰 Utilities
 - **Strix Logger** – Flexible logging utility with toggles, context highlights, color-coded messages, method tracing, and optional file output
+- **Reflection Probe Resizer** - Automatically resizes the selected probe to fit the surrounding space using raycast
 - More coming soon...
 
 ---

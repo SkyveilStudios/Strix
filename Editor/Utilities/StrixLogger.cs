@@ -1,7 +1,8 @@
-﻿#if UNITY_EDITOR
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -28,10 +29,12 @@ namespace Strix.Editor.Utilities {
         
 
         static StrixLogger() {
+#if UNITY_EDITOR
             LoggerEnabled = EditorPrefs.GetBool(LoggerPrefKey, true);
             LogInfoEnabled = EditorPrefs.GetBool(LogInfoPrefKey, true);
             LogWarnEnabled = EditorPrefs.GetBool(LogWarnPrefKey, true);
             LogErrorEnabled = EditorPrefs.GetBool(LogErrorPrefKey, true);
+#endif
         }
         
         /// <summary>
@@ -133,4 +136,3 @@ namespace Strix.Editor.Utilities {
         }
     }
 }
-#endif

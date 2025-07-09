@@ -1,5 +1,4 @@
-﻿#if  UNITY_EDITOR
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Strix.Runtime.Attributes {
     /// <summary>
@@ -7,4 +6,3 @@ namespace Strix.Runtime.Attributes {
     /// </summary>
     public class RequiredAttribute : PropertyAttribute { }
 }
-#endif

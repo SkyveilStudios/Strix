@@ -53,19 +53,37 @@ namespace Strix.Editor.Hub {
                     EnsureInstance = () => EnsureInstance(ref _helpBoxInstance, typeof(HubHelpBox))
                 }
             },
+            {
+                AttributeType.Title, new AttributeData {
+                    Label = "Title",
+                    Description = "Draws a colored title with a colored line above a field.\n\n" +
+                                  "<b>Parameters:</b>\n" +
+                                  "• <b>title</b>: The text to display.\n" +
+                                  "• <b>titleColor</b>: The color of the text.\n" +
+                                  "• <b>lineColor</b>: The color of the horizontal line.\n" +
+                                  "• <b>lineHeight</b>: The height of the line in pixels.\n" +
+                                  "• <b>spacing</b>: Vertical spacing below the title.\n" +
+                                  "• <b>alignTitleLeft</b>: Align the title to the left instead of center.",
+                    CodeExample = "[Title(\"Settings\", TitleColor.Cyan, TitleColor.Gray, 2f, 1f, true)]\n[SerializeField] private int health;\n" +
+                    "[Title(\"References\")]\n[SerializeField] private GameObject player;",
+                    EnsureInstance = () => EnsureInstance(ref _titleInstance, typeof(HubTitle))
+                }
+            }
         };
 
         private enum AttributeType {
             ImagePreview,
             Required,
             ReadOnly,
-            HelpBox
+            HelpBox,
+            Title
         }
 
         private static HubImagePreview _imagePreviewInstance;
         private static HubRequired _requiredInstance;
         private static HubReadOnly _readOnlyInstance;
         private static HubHelpBox _helpBoxInstance;
+        private static HubTitle _titleInstance;
         private static UnityEditor.Editor _previewEditor;
         private static Vector2 _scroll;
         private static AttributeType _selectedAttribute = AttributeType.ImagePreview;

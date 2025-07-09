@@ -30,6 +30,7 @@ Enhance your inspector experience with these custom attributes:
 - `[Required]` - Displays a warning when a field is missing or null
 - `[ReadOnly]` - Displays fields grayed out and uneditable in the inspector
 - `[HelpBox]` - Displays a help box above a field in the inspector
+- `[Title]` - Draws a colored title with a colored line above a field
 - More coming soon...
 
 ### 🧱 Components

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿#if  UNITY_EDITOR
+using UnityEngine;
 
 namespace Strix.Runtime.Components {
     /// <summary>
@@ -11,3 +12,4 @@ namespace Strix.Runtime.Components {
         [HideInInspector] public bool isPreviewPlaying;
     }
 }
+#endif

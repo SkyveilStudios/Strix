@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if  UNITY_EDITOR
+using System;
 using UnityEngine;
 
 namespace Strix.Runtime.Attributes {
@@ -26,3 +27,4 @@ namespace Strix.Runtime.Attributes {
         }
     }
 }
+#endif

@@ -1,6 +1,5 @@
 ﻿#if UNITY_EDITOR
 using UnityEditor;
-#endif
 using UnityEngine;
 
 namespace Strix.Runtime.Components {
@@ -43,7 +42,6 @@ namespace Strix.Runtime.Components {
         [Range(0.05f, 1.0f)] 
         public float markerRadius = 0.25f;
         
-        #if UNITY_EDITOR
         public bool ShouldDisplayInEditor =>
             visibility switch {
                 NoteVisibility.Always => true,
@@ -60,6 +58,6 @@ namespace Strix.Runtime.Components {
                 NoteCategory.Custom => customColor,
                 _ => Color.white
             };
-        #endif
     }
 }
+#endif

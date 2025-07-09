@@ -1,3 +1,4 @@
+#if  UNITY_EDITOR
 using System;
 using UnityEngine;
 
@@ -8,3 +9,4 @@ namespace Strix.Runtime.Attributes {
     [AttributeUsage(AttributeTargets.Field)]
     public class DisableInEditModeAttribute : PropertyAttribute {}
 }
+#endif

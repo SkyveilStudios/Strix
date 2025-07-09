@@ -1,4 +1,5 @@
-﻿using Strix.Editor.Common;
+﻿using System;
+using Strix.Editor.Common;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,7 +7,10 @@ namespace Strix.Editor.Hub {
     internal static class StrixVersionChecker {
         public static void CheckForUpdateFromHub(bool showIfUpToDate = false) {
             GitHubReleaseChecker.CheckForUpdate((latestTag, releasePage, unityPackageUrl) => {
-                if (latestTag != StrixVersionInfo.CurrentVersion) {
+                var current = ParseVersion(StrixVersionInfo.CurrentVersion);
+                var latest = ParseVersion(latestTag);
+                
+                if (latest >  current) {
                     EditorApplication.delayCall += () => {
                         var choice = EditorUtility.DisplayDialogComplex(
                             "Strix Update Available",
@@ -39,6 +43,10 @@ namespace Strix.Editor.Hub {
                     };
                 }
             });
+        }
+        
+        private static Version ParseVersion(string tag) {
+            return Version.TryParse(tag.TrimStart('v', 'V'), out var version) ? version : new Version(0, 0, 0);
         }
     }
 }

@@ -13,7 +13,6 @@ namespace Strix.Editor.Drawers {
             var percent = Mathf.InverseLerp(min, max, value);
             
             Rect barRect = new(position.x, position.y, position.width, EditorGUIUtility.singleLineHeight);
-            var barHeight = barRect.height;
             var fillWidth = Mathf.Clamp01(percent) * barRect.width;
             
             Color borderColor = new(0.35f, 0.35f, 0.35f);
@@ -35,7 +34,7 @@ namespace Strix.Editor.Drawers {
                 normal = { textColor = textColor },
                 fontStyle = FontStyle.Bold,
             };
-            EditorGUI.LabelField(barRect, displayLabel, style);
+            DrawOutlinedLabel(barRect, displayLabel, style, Color.black, textColor);
 
             if (!attr.IsInteractable) return;
 
@@ -81,6 +80,20 @@ namespace Strix.Editor.Drawers {
                     property.doubleValue = value;
                     break;
             }
+        }
+        
+        private static void DrawOutlinedLabel(Rect position, string text, GUIStyle style, Color outlineColor, Color textColor) {
+            var originalColor = style.normal.textColor;
+            style.normal.textColor = outlineColor;
+            
+            EditorGUI.LabelField(new Rect(position.x - 1, position.y, position.width, position.height), text, style);
+            EditorGUI.LabelField(new Rect(position.x + 1, position.y, position.width, position.height), text, style);
+            EditorGUI.LabelField(new Rect(position.x, position.y - 1, position.width, position.height), text, style);
+            EditorGUI.LabelField(new Rect(position.x, position.y + 1, position.width, position.height), text, style);
+            
+            style.normal.textColor = textColor;
+            EditorGUI.LabelField(position, text, style);
+            style.normal.textColor = originalColor;
         }
 
         private static Color GetColor(ProgressBarColor barColor) => barColor switch {

@@ -31,6 +31,8 @@ Enhance your inspector experience with these custom attributes:
 - `[ReadOnly]` - Displays fields grayed out and uneditable in the inspector
 - `[HelpBox]` - Displays a help box above a field in the inspector
 - `[Title]` - Draws a colored title with a colored line above a field
+- `[DisableInPlayMode]` – Makes the field read-only while in play mode
+- `[DisableInEditMode]` - Makes the field read-only while in edit mode
 - More coming soon...
 
 ### 🧱 Components

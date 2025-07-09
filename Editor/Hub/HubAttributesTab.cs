@@ -68,6 +68,16 @@ namespace Strix.Editor.Hub {
                     "[Title(\"References\")]\n[SerializeField] private GameObject player;",
                     EnsureInstance = () => EnsureInstance(ref _titleInstance, typeof(HubTitle))
                 }
+            },
+            {
+                AttributeType.DisableMode, new AttributeData {
+                    Label = "DisableMode",
+                    Description = "Makes the field read-only while in play or edit mode.\n" +
+                                  "Note: Strix Hub doesn't display the preview correctly",
+                    CodeExample = "[DisableInPlayMode]\n[SerializeField] private int editableInEditModeOnly;\n" +
+                                  "[DisableInEditMode]\n[SerializeField] private int editableInPlayModeOnly;",
+                    EnsureInstance = () => EnsureInstance(ref _disableModeInstance, typeof(HubDisableMode))
+                }
             }
         };
 
@@ -76,7 +86,8 @@ namespace Strix.Editor.Hub {
             Required,
             ReadOnly,
             HelpBox,
-            Title
+            Title,
+            DisableMode
         }
 
         private static HubImagePreview _imagePreviewInstance;
@@ -84,6 +95,7 @@ namespace Strix.Editor.Hub {
         private static HubReadOnly _readOnlyInstance;
         private static HubHelpBox _helpBoxInstance;
         private static HubTitle _titleInstance;
+        private static HubDisableMode _disableModeInstance;
         private static UnityEditor.Editor _previewEditor;
         private static Vector2 _scroll;
         private static AttributeType _selectedAttribute = AttributeType.ImagePreview;

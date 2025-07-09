@@ -78,6 +78,20 @@ namespace Strix.Editor.Hub {
                                   "[DisableInEditMode]\n[SerializeField] private int editableInPlayModeOnly;",
                     EnsureInstance = () => EnsureInstance(ref _disableModeInstance, typeof(HubDisableMode))
                 }
+            },
+            {
+                AttributeType.ProgressBar, new AttributeData {
+                    Label = "ProgressBar",
+                    Description = "Progress bar for numeric fields (int, float, double)\n\n" +
+                                  "<b>Parameters:</b>\n" +
+                                  "• <b>label</b>: Text to display on the bar.\n" +
+                                  "• <b>min</b>: Minimum value of the bar.\n" +
+                                  "• <b>max</b>: Maximum value of the bar.\n" +
+                                  "• <b>barColor</b>: The color of the filled bar.\n" +
+                                  "• <b>IsInteractable</b>: Toggle if the bar has a slider below.\n",
+                    CodeExample = "[ProgressBar(\"Health\", 0, 100, ProgressBarColor.Red, IsInteractable = true)]\npublic float Health = 50;",
+                    EnsureInstance = () => EnsureInstance(ref _progressBarInstance, typeof(HubProgressBar))
+                }
             }
         };
 
@@ -87,7 +101,8 @@ namespace Strix.Editor.Hub {
             ReadOnly,
             HelpBox,
             Title,
-            DisableMode
+            DisableMode,
+            ProgressBar
         }
 
         private static HubImagePreview _imagePreviewInstance;
@@ -96,6 +111,7 @@ namespace Strix.Editor.Hub {
         private static HubHelpBox _helpBoxInstance;
         private static HubTitle _titleInstance;
         private static HubDisableMode _disableModeInstance;
+        private static HubProgressBar _progressBarInstance;
         private static UnityEditor.Editor _previewEditor;
         private static Vector2 _scroll;
         private static AttributeType _selectedAttribute = AttributeType.ImagePreview;

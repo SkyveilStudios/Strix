@@ -21,7 +21,7 @@
 - **Project Stats** – Analyze project structure, file types, asset sizes, and more
 - **Missing Script Finder** – Scan for and locate GameObjects with missing script references
 - **Icon Browser** – Browse and preview Unity’s internal editor icons for UI development
-- **Task Board** – Simple drag-and-drop board for organizing your development workflow
+- **Task Board** – Simple task board for organizing your development workflow
 - **Notepad** – Notes panel for jotting down ideas, TODOs, or quick references
 
 ### 🧬 Attributes
@@ -44,6 +44,11 @@ Reusable and editor-friendly components to aid development:
 - **Strix Logger** – Flexible logging utility with toggles, context highlights, color-coded messages, method tracing, and optional file output
 - **Reflection Probe Resizer** - Automatically resizes the selected probe to fit the surrounding space using raycast
 - More coming soon...
+
+---
+
+## 📸 Want to See It in Action?
+Check out the [📖 Showcase](SHOWCASE.md) for screenshots and code examples of each tool, attribute, and component.
 
 ---
 

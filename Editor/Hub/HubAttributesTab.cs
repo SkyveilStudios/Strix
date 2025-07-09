@@ -8,11 +8,13 @@ namespace Strix.Editor.Hub {
     public static class HubAttributesTab {
         private enum AttributeType {
             ImagePreview,
-            Required
+            Required,
+            ReadOnly
         }
 
         private static HubImagePreview _imagePreviewInstance;
         private static HubRequired _requiredInstance;
+        private static HubReadOnly _readOnlyInstance;
         private static UnityEditor.Editor _previewEditor;
         private static Vector2 _scroll;
 
@@ -65,6 +67,7 @@ namespace Strix.Editor.Hub {
 
             DrawAttributeButton("ImagePreview", AttributeType.ImagePreview);
             DrawAttributeButton("Required", AttributeType.Required);
+            DrawAttributeButton("ReadOnly", AttributeType.ReadOnly);
 
             GUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
@@ -109,7 +112,8 @@ namespace Strix.Editor.Hub {
                     "• <b>width</b> (float): Width of the image (ignored if fullWidth is true).\n" +
                     "• <b>fullWidth</b> (bool): If true, stretches image to full inspector width.\n" +
                     "• <b>alignment</b> (ImageAlignment): If not full width, controls image alignment: Left, Center, or Right.",
-                AttributeType.Required => "Displays a warning that a GameObject is missing/null",
+                AttributeType.Required => "Displays a warning that a GameObject is missing/null.",
+                AttributeType.ReadOnly => "Displays fields grayed out preventing them being edited in the inspector.",
                 _ => "Preview"
             };
 
@@ -133,6 +137,10 @@ namespace Strix.Editor.Hub {
                     EnsureRequiredInstance();
                     DrawEditorPreview(_requiredInstance);
                     break;
+                case AttributeType.ReadOnly:
+                    EnsureReadOnlyInstance();
+                    DrawEditorPreview(_readOnlyInstance);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -146,6 +154,13 @@ namespace Strix.Editor.Hub {
 
             UnityEditor.Editor.CreateCachedEditor(instance, null, ref _previewEditor);
             _previewEditor?.OnInspectorGUI();
+        }
+
+        private static void EnsureReadOnlyInstance() {
+            if (_readOnlyInstance) return;
+            var go = HubTabUtils.CreateOrGetPreviewGo();
+            if (!go.TryGetComponent(out _readOnlyInstance))
+                _readOnlyInstance = go.AddComponent<HubReadOnly>();
         }
 
         private static void EnsureRequiredInstance() {
@@ -166,6 +181,7 @@ namespace Strix.Editor.Hub {
             var code = _selectedAttribute switch {
                 AttributeType.ImagePreview => "[ImagePreview(\"Assets/Strix/Banners/StrixBanner.jpg\", 400f)]\n[SerializeField] private GameObject obj;",
                 AttributeType.Required => "[Required]\n[SerializeField] public GameObject obj;",
+                AttributeType.ReadOnly  => "[ReadOnly]\n[SerializeField] public float speed;",
                 _ => throw new ArgumentOutOfRangeException()
             };
 

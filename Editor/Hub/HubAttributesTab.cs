@@ -41,18 +41,31 @@ namespace Strix.Editor.Hub {
                     CodeExample = "[ReadOnly]\n[SerializeField] public float speed;",
                     EnsureInstance = () => EnsureInstance(ref _readOnlyInstance, typeof(HubReadOnly))
                 }
-            }
+            },
+            {
+                AttributeType.HelpBox, new AttributeData {
+                    Label = "HelpBox",
+                    Description = "Displays a help box above a field in the inspector.\n\n" +
+                                  "<b>Parameters:</b>\n" +
+                                  "• <b>message</b>: The text to display inside the help box.\n" +
+                                  "• <b>type</b>: The message type (None, Info, Warning, Error).",
+                    CodeExample = "[HelpBox(\"This field is optional and used for debugging only.\", MessageType.Info)]\n[SerializeField] private string debugNote;\n",
+                    EnsureInstance = () => EnsureInstance(ref _helpBoxInstance, typeof(HubHelpBox))
+                }
+            },
         };
 
         private enum AttributeType {
             ImagePreview,
             Required,
-            ReadOnly
+            ReadOnly,
+            HelpBox
         }
 
         private static HubImagePreview _imagePreviewInstance;
         private static HubRequired _requiredInstance;
         private static HubReadOnly _readOnlyInstance;
+        private static HubHelpBox _helpBoxInstance;
         private static UnityEditor.Editor _previewEditor;
         private static Vector2 _scroll;
         private static AttributeType _selectedAttribute = AttributeType.ImagePreview;

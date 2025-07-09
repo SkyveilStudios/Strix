@@ -1,5 +1,5 @@
 ﻿namespace Strix.Editor.Common {
     public static class StrixVersionInfo {
-        public const string CurrentVersion = "v0.2.1";
+        public const string CurrentVersion = "v0.2.2";
     }
 }

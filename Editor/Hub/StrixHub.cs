@@ -21,6 +21,11 @@ namespace Strix.Editor.Hub {
             window.titleContent = new GUIContent("Strix Hub");
             window.minSize = new Vector2(700, 600);
             window.ShowUtility();
+            
+            const string checkUpdatesKey = "Strix.Hub.CheckForUpdates";
+            if (EditorPrefs.GetBool(checkUpdatesKey, true)) {
+                StrixVersionChecker.CheckForUpdateFromHub(showIfUpToDate: false);
+            }
         }
 
         [InitializeOnLoadMethod]
@@ -80,9 +85,9 @@ namespace Strix.Editor.Hub {
             var leftRect = new Rect(rect.x + padding, rect.y + verticalOffset, leftSize.x, labelHeight);
             GUI.Label(leftRect, "Copyright © 2025 SkyveilStudios. All rights reserved.", labelStyle);
             
-            var versionSize = labelStyle.CalcSize(new GUIContent("Version 0.1.5"));
+            var versionSize = labelStyle.CalcSize(new GUIContent("Version " + StrixVersionInfo.CurrentVersion));
             var rightRect = new Rect(rect.xMax - versionSize.x - padding, rect.y + verticalOffset, versionSize.x, labelHeight);
-            GUI.Label(rightRect, "Version 0.1.5", labelStyle);
+            GUI.Label(rightRect, $"Version {StrixVersionInfo.CurrentVersion}", labelStyle);
         }
 
         private static void DrawDescriptionBar()

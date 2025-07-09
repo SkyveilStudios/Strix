@@ -34,22 +34,39 @@ namespace Strix.Editor.Hub {
 
         private static void DrawSettings() {
             EditorGUILayout.LabelField("Settings:", EditorStyles.boldLabel);
+            
+            // Show on startup
             var autoOpen = EditorPrefs.GetBool(StrixHub.AutoOpenKey, true);
             var newAutoOpen = EditorGUILayout.ToggleLeft("Show Hub On Startup", autoOpen);
             if (newAutoOpen != autoOpen) EditorPrefs.SetBool(StrixHub.AutoOpenKey, newAutoOpen);
             
-            EditorGUILayout.Space(12);
+            EditorGUILayout.Space(1);
 
-            GUIStyle logsLabelStyle = new GUIStyle(EditorStyles.label) {
+            // Version Checking
+            const string checkUpdatesKey = "Strix.Hub.CheckForUpdates";
+            var checkUpdates = EditorPrefs.GetBool(checkUpdatesKey, true);
+            var newCheckUpdates = EditorGUILayout.ToggleLeft("Check for Strix Updates", checkUpdates);
+            if (newCheckUpdates != checkUpdates) EditorPrefs.SetBool(checkUpdatesKey, newCheckUpdates);
+
+            if (newCheckUpdates) {
+                EditorGUI.indentLevel++;
+                if (GUILayout.Button("Check Now")) {
+                    StrixVersionChecker.CheckForUpdateFromHub(showIfUpToDate: true);
+                }
+                EditorGUI.indentLevel--;
+            }
+
+            EditorGUILayout.Space(12);
+            
+            // Logging
+            var logsLabelStyle = new GUIStyle(EditorStyles.label) {
                 fontStyle = FontStyle.Bold,
                 normal = { textColor = new Color(0.7f, 0.7f, 0.7f) }
             };
             
             EditorGUILayout.LabelField("Logs:", logsLabelStyle);
-            
             var lineRect = GUILayoutUtility.GetRect(1, 1, GUILayout.ExpandWidth(true));
             EditorGUI.DrawRect(lineRect, new Color(0.3f, 0.3f, 0.3f, 1f));
-            
             EditorGUILayout.Space(4);
             
             const string loggerPrefKey = "Strix.Logging.Enabled";

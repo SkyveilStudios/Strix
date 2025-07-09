@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Strix.Runtime.Hub.Attributes;
 using UnityEditor;
 using UnityEngine;
@@ -6,6 +7,43 @@ using Object = UnityEngine.Object;
 
 namespace Strix.Editor.Hub {
     public static class HubAttributesTab {
+        private class AttributeData {
+            public string Label;
+            public string Description;
+            public string CodeExample;
+            public Func<Object> EnsureInstance;
+        }
+
+        private static readonly Dictionary<AttributeType, AttributeData> Attributes = new() {
+            {
+                AttributeType.ImagePreview, new AttributeData {
+                    Label = "ImagePreview",
+                    Description = "Allows you to embed a custom image above a field.\n\n" +
+                                  "<b>Parameters:</b>\n" +
+                                  "• <b>path</b>: Path to the image in Assets.\n" +
+                                  "• <b>width</b>: Image width.\n" +
+                                  "• <b>fullWidth</b>: Stretch image to inspector width.\n" +
+                                  "• <b>alignment</b>: Image alignment: Left, Center, Right.",
+                    CodeExample = "[ImagePreview(\"Assets/Strix/Banners/StrixBanner.jpg\", 400f)]\n[SerializeField] private GameObject obj;",
+                    EnsureInstance = () => EnsureInstance(ref _imagePreviewInstance, typeof(HubImagePreview))
+                }
+            }, {
+                AttributeType.Required, new AttributeData {
+                    Label = "Required",
+                    Description = "Displays a warning when a GameObject is missing or null.",
+                    CodeExample = "[Required]\n[SerializeField] public GameObject obj;",
+                    EnsureInstance = () => EnsureInstance(ref _requiredInstance, typeof(HubRequired))
+                }
+            }, {
+                AttributeType.ReadOnly, new AttributeData {
+                    Label = "ReadOnly",
+                    Description = "Displays fields grayed out and uneditable in the inspector.",
+                    CodeExample = "[ReadOnly]\n[SerializeField] public float speed;",
+                    EnsureInstance = () => EnsureInstance(ref _readOnlyInstance, typeof(HubReadOnly))
+                }
+            }
+        };
+
         private enum AttributeType {
             ImagePreview,
             Required,
@@ -17,12 +55,10 @@ namespace Strix.Editor.Hub {
         private static HubReadOnly _readOnlyInstance;
         private static UnityEditor.Editor _previewEditor;
         private static Vector2 _scroll;
-
         private static AttributeType _selectedAttribute = AttributeType.ImagePreview;
 
         public static void DrawAttributesTab() {
             EditorGUILayout.BeginHorizontal();
-
             EditorGUILayout.BeginVertical(GUILayout.Width(200), GUILayout.ExpandHeight(true));
             DrawAttributeList();
             EditorGUILayout.EndVertical();
@@ -30,17 +66,14 @@ namespace Strix.Editor.Hub {
             EditorGUILayout.BeginVertical(GUILayout.ExpandHeight(true));
             HubTabUtils.DrawHeader("Description");
             DrawDescription();
-
             HubTabUtils.DrawSeparator();
 
             HubTabUtils.DrawHeader("Preview");
             DrawPreview();
-
             HubTabUtils.DrawSeparator();
 
             HubTabUtils.DrawHeader("Code Example");
             DrawCodeBlock();
-
             EditorGUILayout.EndVertical();
 
             EditorGUILayout.EndHorizontal();
@@ -49,7 +82,6 @@ namespace Strix.Editor.Hub {
         private static void DrawAttributeList() {
             EditorGUILayout.BeginVertical(GUILayout.Width(200), GUILayout.ExpandHeight(true));
             HubTabUtils.DrawSidePanelBackground(200);
-
             _scroll = GUILayout.BeginScrollView(_scroll, GUIStyle.none, GUI.skin.verticalScrollbar);
 
             var labelStyle = new GUIStyle(EditorStyles.boldLabel) {
@@ -59,15 +91,14 @@ namespace Strix.Editor.Hub {
                 fixedHeight = 32,
                 padding = new RectOffset(0, 0, -15, 0)
             };
-
             EditorGUILayout.LabelField("Attributes", labelStyle, GUILayout.ExpandWidth(true));
 
             var lineRect = GUILayoutUtility.GetRect(1, 2, GUILayout.ExpandWidth(true));
             EditorGUI.DrawRect(lineRect, new Color(0.7f, 0.7f, 0.7f));
 
-            DrawAttributeButton("ImagePreview", AttributeType.ImagePreview);
-            DrawAttributeButton("Required", AttributeType.Required);
-            DrawAttributeButton("ReadOnly", AttributeType.ReadOnly);
+            foreach (var kvp in Attributes) {
+                DrawAttributeButton(kvp.Value.Label, kvp.Key);
+            }
 
             GUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
@@ -104,46 +135,20 @@ namespace Strix.Editor.Hub {
         }
 
         private static void DrawDescription() {
-            var description = _selectedAttribute switch {
-                AttributeType.ImagePreview =>
-                    "Allows you to embed a custom image directly above a field in the inspector.\n\n" +
-                    "<b>Parameters:</b>\n" +
-                    "• <b>path</b> (string): Path to the image within the Assets folder.\n" +
-                    "• <b>width</b> (float): Width of the image (ignored if fullWidth is true).\n" +
-                    "• <b>fullWidth</b> (bool): If true, stretches image to full inspector width.\n" +
-                    "• <b>alignment</b> (ImageAlignment): If not full width, controls image alignment: Left, Center, or Right.",
-                AttributeType.Required => "Displays a warning that a GameObject is missing/null.",
-                AttributeType.ReadOnly => "Displays fields grayed out preventing them being edited in the inspector.",
-                _ => "Preview"
-            };
-
+            var data = Attributes[_selectedAttribute];
             var style = new GUIStyle(EditorStyles.label) {
                 wordWrap = true,
                 richText = true
             };
 
             EditorGUILayout.BeginVertical("box");
-            GUILayout.Label(description, style);
+            GUILayout.Label(data.Description, style);
             EditorGUILayout.EndVertical();
         }
 
         private static void DrawPreview() {
-            switch (_selectedAttribute) {
-                case AttributeType.ImagePreview:
-                    EnsureImagePreviewInstance();
-                    DrawEditorPreview(_imagePreviewInstance);
-                    break;
-                case AttributeType.Required:
-                    EnsureRequiredInstance();
-                    DrawEditorPreview(_requiredInstance);
-                    break;
-                case AttributeType.ReadOnly:
-                    EnsureReadOnlyInstance();
-                    DrawEditorPreview(_readOnlyInstance);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            var instance = Attributes[_selectedAttribute].EnsureInstance();
+            DrawEditorPreview(instance);
         }
 
         private static void DrawEditorPreview(Object instance) {
@@ -156,35 +161,8 @@ namespace Strix.Editor.Hub {
             _previewEditor?.OnInspectorGUI();
         }
 
-        private static void EnsureReadOnlyInstance() {
-            if (_readOnlyInstance) return;
-            var go = HubTabUtils.CreateOrGetPreviewGo();
-            if (!go.TryGetComponent(out _readOnlyInstance))
-                _readOnlyInstance = go.AddComponent<HubReadOnly>();
-        }
-
-        private static void EnsureRequiredInstance() {
-            if (_requiredInstance) return;
-            var go = HubTabUtils.CreateOrGetPreviewGo();
-            if (!go.TryGetComponent(out _requiredInstance))
-                _requiredInstance = go.AddComponent<HubRequired>();
-        }
-
-        private static void EnsureImagePreviewInstance() {
-            if (_imagePreviewInstance) return;
-            var go = HubTabUtils.CreateOrGetPreviewGo();
-            if (!go.TryGetComponent(out _imagePreviewInstance))
-                _imagePreviewInstance = go.AddComponent<HubImagePreview>();
-        }
-
         private static void DrawCodeBlock() {
-            var code = _selectedAttribute switch {
-                AttributeType.ImagePreview => "[ImagePreview(\"Assets/Strix/Banners/StrixBanner.jpg\", 400f)]\n[SerializeField] private GameObject obj;",
-                AttributeType.Required => "[Required]\n[SerializeField] public GameObject obj;",
-                AttributeType.ReadOnly  => "[ReadOnly]\n[SerializeField] public float speed;",
-                _ => throw new ArgumentOutOfRangeException()
-            };
-
+            var code = Attributes[_selectedAttribute].CodeExample;
             var style = new GUIStyle(EditorStyles.textArea) {
                 font = Font.CreateDynamicFontFromOSFont("Courier New", 12),
                 wordWrap = false,
@@ -192,6 +170,15 @@ namespace Strix.Editor.Hub {
             };
 
             EditorGUILayout.SelectableLabel(code, style, GUILayout.ExpandHeight(true));
+        }
+
+        private static Object EnsureInstance<T>(ref T field, Type type) where T : Component {
+            if (field) return field;
+            var go = HubTabUtils.CreateOrGetPreviewGo();
+            field = go.GetComponent(type) as T;
+            if (!field)
+                field = go.AddComponent(type) as T;
+            return field;
         }
 
         [InitializeOnLoadMethod]

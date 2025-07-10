@@ -3,6 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using UnityEngine.Tilemaps;
 
 #if UNITY_EDITOR
 namespace Strix.Editor.Hierarchy {
@@ -108,7 +109,22 @@ namespace Strix.Editor.Hierarchy {
                 MeshFilter => "MeshFilter Icon",
                 Animator => "Animator Icon",
                 Rigidbody => "Rigidbody Icon",
-                Collider => "Collider Icon",
+                Rigidbody2D => "Rigidbody Icon",
+                BoxCollider => "BoxCollider Icon",
+                BoxCollider2D => "BoxCollider2D Icon",
+                CapsuleCollider => "CapsuleCollider Icon",
+                CapsuleCollider2D => "CapsuleCollider2D Icon",
+                CircleCollider2D => "CircleCollider2D Icon",
+                CompositeCollider2D => "CompositeCollider2D Icon",
+                CustomCollider2D => "CustomCollider2D Icon",
+                EdgeCollider2D => "EdgeCollider2D Icon",
+                MeshCollider => "d_MeshCollider Icon",
+                PolygonCollider2D => "d_PolygonCollider2D Icon",
+                SphereCollider => "d_SphereCollider Icon",
+                TerrainCollider => "d_TerrainCollider Icon",
+                TilemapCollider2D  => "d_TilemapCollider2D Icon",
+                WheelCollider => "d_WheelCollider Icon",
+                WheelJoint2D => "d_WheelJoint2D Icon",
                 NavMeshAgent => "NavMeshAgent Icon",
                 RectTransform => "RectTransform Icon",
                 ReflectionProbe => "ReflectionProbe Icon",

@@ -10,6 +10,7 @@
             "d_PlayButton",
             "d_PauseButton",
             "d_preAudioLoopOff",
+            "CustomCollider2D Icon",
             "Toolbar Plus",
             "Toolbar Minus",
             "Search Icon",

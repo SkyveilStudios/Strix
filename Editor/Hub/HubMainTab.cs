@@ -224,18 +224,6 @@ namespace Strix.Editor.Hub {
                 EditorApplication.RepaintHierarchyWindow();
             }
             
-            // Line Thickness (not for all styles)
-            var style = (Hierarchy.StrixHierarchyConnector.LineStyle)selected;
-            if (style != Hierarchy.StrixHierarchyConnector.LineStyle.Minimal && 
-                style != Hierarchy.StrixHierarchyConnector.LineStyle.Heavy) {
-                var currentThickness = EditorPrefs.GetFloat("Strix.Hierarchy.LineThickness", 1f);
-                var newThickness = EditorGUILayout.Slider("Line Thickness", currentThickness, 0.5f, 3f);
-                if (Mathf.Abs(newThickness - currentThickness) > 0.01f) {
-                    EditorPrefs.SetFloat("Strix.Hierarchy.LineThickness", newThickness);
-                    EditorApplication.RepaintHierarchyWindow();
-                }
-            }
-            
             // Line Opacity with live preview
             var currentOpacity = EditorPrefs.GetFloat(LINE_OPACITY_KEY, 0.25f);
             EditorGUILayout.BeginHorizontal();
@@ -360,7 +348,6 @@ namespace Strix.Editor.Hub {
             var oldColor = Handles.color;
             Handles.color = color;
             
-            var thickness = EditorPrefs.GetFloat("Strix.Hierarchy.LineThickness", 1f);
             var padding = 4f;
             var start = new Vector3(rect.x + padding, rect.center.y);
             var end = new Vector3(rect.xMax - padding, rect.center.y);

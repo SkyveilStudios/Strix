@@ -31,6 +31,21 @@ Notes panel for jotting down ideas, TODOs, or quick references
 
 ---
 
+## 📂 Hierarchy
+### 🔗 Hierarchy Lines
+Draws connecting lines between objects to visualize parent to child relationships easier.
+- Enable/Disable the option in Strix Hub
+- Supports solid, dotted, and dashed styles
+- Supports Dark/Light Mode
+
+### Hierarchy Icons
+Replaces default object icons with component icons.
+- Top component takes priority
+- Supports third part tools (ex: Mirror)
+
+![Hierarchy](Docs/Images/Hierarchy/Hierarchy.png)
+---
+
 ## Attributes
 ### 🖼️ ImagePreview
 Show static images in the Inspector with optional sizing and alignment

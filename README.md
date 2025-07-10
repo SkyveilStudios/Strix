@@ -24,6 +24,10 @@
 - **Task Board** – Simple task board for organizing your development workflow
 - **Notepad** – Notes panel for jotting down ideas, TODOs, or quick references
 
+### 📂 Hierarchy
+- **Lines/Tree** - Draws connecting lines between objects.
+- **Icons** - Replaces default icons with component icons. Supports ThirdParty tools
+
 ### 🧬 Attributes
 Enhance your inspector experience with these custom attributes:
 - `[ImagePreview]` – Show static images in the Inspector with optional sizing and alignment

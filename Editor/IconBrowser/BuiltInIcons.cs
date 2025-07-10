@@ -4,6 +4,7 @@
             "console.infoicon",
             "console.warnicon",
             "console.erroricon",
+            "d_UnityEditor.InspectorWindow",
             "d_console.infoicon",
             "d_console.warnicon",
             "d_console.erroricon",

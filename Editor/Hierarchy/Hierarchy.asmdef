@@ -1,10 +1,8 @@
 {
-    "name": "Strix.Hub",
+    "name": "Strix.Hierarchy",
     "rootNamespace": "",
     "references": [
-        "GUID:68c5eebe128d1fc44929dfc6fe6d008b",
-        "GUID:d2f98db5ad8bcb04eb80c2192d364f71",
-        "GUID:fd9dbf391e2283b48b3167cc3293d1de"
+        "GUID:68c5eebe128d1fc44929dfc6fe6d008b"
     ],
     "includePlatforms": [
         "Editor"

@@ -37,6 +37,7 @@ Enhance your inspector experience with these custom attributes:
 - `[Title]` - Draws a colored title with a colored line above a field
 - `[DisableInPlayMode]` – Makes the field read-only while in play mode
 - `[DisableInEditMode]` - Makes the field read-only while in edit mode
+- `[ProgressBar]` - Draws a progress bar for numeric fields (int, float, double)
 - More coming soon...
 
 ### 🧱 Components

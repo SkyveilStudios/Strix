@@ -95,7 +95,7 @@ namespace Strix.Editor.Drawers {
             EditorGUI.LabelField(position, text, style);
             style.normal.textColor = originalColor;
         }
-
+        
         private static Color GetColor(ProgressBarColor barColor) => barColor switch {
             ProgressBarColor.Red => Color.red,
             ProgressBarColor.Green => Color.green,
@@ -105,6 +105,33 @@ namespace Strix.Editor.Drawers {
             ProgressBarColor.Magenta => Color.magenta,
             ProgressBarColor.Gray => Color.gray,
             ProgressBarColor.White => Color.white,
+            ProgressBarColor.Orange => new Color(1f, 0.5f, 0f),
+            ProgressBarColor.Purple => new Color(0.5f, 0f, 0.5f),
+            ProgressBarColor.Pink => new Color(1f, 0.4f, 0.7f),
+            ProgressBarColor.Teal => new Color(0f, 0.5f, 0.5f),
+            ProgressBarColor.Lime => new Color(0.7f, 1f, 0f),
+            ProgressBarColor.Indigo => new Color(0.29f, 0f, 0.51f),
+            ProgressBarColor.Gold => new Color(1f, 0.84f, 0f),
+            ProgressBarColor.Aquamarine => new Color(0.5f, 1f, 0.83f),
+            ProgressBarColor.Beige => new Color(0.96f, 0.96f, 0.86f),
+            ProgressBarColor.Brown => new Color(0.59f, 0.29f, 0f),
+            ProgressBarColor.Coral => new Color(1f, 0.5f, 0.31f),
+            ProgressBarColor.Crimson => new Color(0.86f, 0.08f, 0.24f),
+            ProgressBarColor.DarkBlue => new Color(0f, 0f, 0.55f),
+            ProgressBarColor.DarkGreen => new Color(0f, 0.39f, 0f),
+            ProgressBarColor.DarkRed => new Color(0.55f, 0f, 0f),
+            ProgressBarColor.Ivory => new Color(1f, 1f, 0.94f),
+            ProgressBarColor.Lavender => new Color(0.9f, 0.9f, 0.98f),
+            ProgressBarColor.LightBlue => new Color(0.68f, 0.85f, 0.9f),
+            ProgressBarColor.LightGreen => new Color(0.56f, 0.93f, 0.56f),
+            ProgressBarColor.Navy => new Color(0f, 0f, 0.5f),
+            ProgressBarColor.Olive => new Color(0.5f, 0.5f, 0f),
+            ProgressBarColor.Peach => new Color(1f, 0.9f, 0.71f),
+            ProgressBarColor.Salmon => new Color(0.98f, 0.5f, 0.45f),
+            ProgressBarColor.Silver => new Color(0.75f, 0.75f, 0.75f),
+            ProgressBarColor.Tan => new Color(0.82f, 0.71f, 0.55f),
+            ProgressBarColor.Turquoise => new Color(0.25f, 0.88f, 0.82f),
+            ProgressBarColor.Violet => new Color(0.93f, 0.51f, 0.93f),
             _ => Color.green
         };
     }

@@ -6,16 +6,37 @@ using UnityEngine;
 namespace Strix.Editor.Hierarchy {
     [InitializeOnLoad]
     public static class StrixHierarchyConnector {
+        private enum LineStyle { Solid, Dotted, Dashed }
+        private const string LineStyleKey = "Strix.Hierarchy.LineStyle";
+
         private const float IndentWidth = 14f;
         private const float TriangleCenterOffset = 39f;
         private static readonly Dictionary<Transform, int> DepthCache = new();
 
         static StrixHierarchyConnector() { EditorApplication.hierarchyWindowItemOnGUI += OnHierarchyGUI; }
+        
+        private static void DrawStyledLine(Vector2 start, Vector2 end, LineStyle style) {
+            var length = Vector2.Distance(start, end);
+            if (length <= 0.1f) return;
 
-        private static void DrawVerticalLine(float x, float yTop, float yBottom) => Handles.DrawLine(new Vector2(x, yTop), new Vector2(x, yBottom));
-        private static void DrawHorizontalLine(float xStart, float xEnd, float y) => Handles.DrawLine(new Vector2(xStart, y), new Vector2(xEnd, y));
+            var isVertical = Mathf.Approximately(start.x, end.x);
+
+            switch (style) {
+                case LineStyle.Solid:
+                    Handles.DrawLine(start, end);
+                    break;
+                case LineStyle.Dotted:
+                    Handles.DrawDottedLine(start, end, isVertical ? 3.5f : 2.5f);
+                    break;
+                case LineStyle.Dashed:
+                    Handles.DrawDottedLine(start, end, isVertical ? 4.5f : 6f);
+                    break;
+            }
+        }
 
         private static void OnHierarchyGUI(int instanceID, Rect rect) {
+            if (!EditorPrefs.GetBool("Strix.Hierarchy.ShowLines", true)) return;
+            
             var go = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
             if (go == null || go.transform.parent == null) return;
 
@@ -25,19 +46,19 @@ namespace Strix.Editor.Hierarchy {
 
             Handles.color = new Color(1f, 1f, 1f, 0.25f);
 
+            var style = (LineStyle)EditorPrefs.GetInt(LineStyleKey, 0);
             for (var i = 0; i < depth; i++) {
                 var ancestor = GetAncestorAtDepth(t, i);
                 if (!HasSiblingBelow(ancestor)) continue;
                 var x = i * IndentWidth + TriangleCenterOffset;
-                Handles.DrawLine(new Vector2(x, rect.yMin), new Vector2(x, rect.yMax));
+                DrawStyledLine(new Vector2(x, rect.yMin), new Vector2(x, rect.yMax), style);
             }
 
             var currentX = depth * IndentWidth + TriangleCenterOffset;
             var yEnd = HasSiblingBelow(t) ? rect.yMax : yMid;
-            DrawVerticalLine(currentX, rect.yMin, yEnd);
 
-            var xEnd = currentX + IndentWidth;
-            DrawHorizontalLine(currentX, xEnd, yMid);
+            DrawStyledLine(new Vector2(currentX, rect.yMin), new Vector2(currentX, yEnd), (LineStyle)EditorPrefs.GetInt(LineStyleKey, 0));
+            DrawStyledLine(new Vector2(currentX, yMid), new Vector2(currentX + IndentWidth, yMid), (LineStyle)EditorPrefs.GetInt(LineStyleKey, 0));
 
             DepthCache.Clear();
         }

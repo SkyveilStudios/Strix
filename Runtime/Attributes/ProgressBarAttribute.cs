@@ -3,7 +3,12 @@ using UnityEngine;
 
 namespace Strix.Runtime.Attributes {
     public enum ProgressBarColor {
-        Red, Green, Blue, Yellow, Cyan, Magenta, Gray, White
+        Red, Green, Blue, Yellow, Cyan, Magenta, Gray, White,
+        Orange, Purple, Pink, Teal, Lime, Indigo, Gold, Aquamarine, 
+        Beige, Brown, Coral, Crimson, DarkBlue, DarkGreen, DarkRed, Ivory, 
+        Lavender, LightBlue, LightGreen, Navy, Olive, Peach, Salmon, Silver, 
+        Tan, Turquoise, Violet
+
     }
     
     [AttributeUsage(AttributeTargets.Field)]

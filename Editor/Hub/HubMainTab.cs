@@ -18,7 +18,6 @@ namespace Strix.Editor.Hub {
             EditorGUILayout.BeginVertical("box", GUILayout.ExpandHeight(true));
             DrawSettings();
             EditorGUILayout.EndVertical();
-
             EditorGUILayout.EndHorizontal();
         }
         
@@ -45,26 +44,44 @@ namespace Strix.Editor.Hub {
             // Version Checking
             const string checkUpdatesKey = "Strix.Hub.CheckForUpdates";
             var checkUpdates = EditorPrefs.GetBool(checkUpdatesKey, true);
-            var newCheckUpdates = EditorGUILayout.ToggleLeft("Check for Strix Updates", checkUpdates);
+            var newCheckUpdates = EditorGUILayout.ToggleLeft("Check for Updates On Startup", checkUpdates);
             if (newCheckUpdates != checkUpdates) EditorPrefs.SetBool(checkUpdatesKey, newCheckUpdates);
 
-            if (newCheckUpdates) {
-                EditorGUI.indentLevel++;
-                if (GUILayout.Button("Check Now")) {
-                    StrixVersionChecker.CheckForUpdateFromHub(showIfUpToDate: true);
-                }
-                EditorGUI.indentLevel--;
+            EditorGUI.indentLevel++;
+            if (GUILayout.Button("Check For Updates")) {
+                StrixVersionChecker.CheckForUpdateFromHub(showIfUpToDate: true);
             }
+            EditorGUI.indentLevel--;
 
-            EditorGUILayout.Space(12);
+            EditorGUILayout.Space(1);
             
+            // Hierarchy Trees
+            EditorGUILayout.LabelField("Hierarchy:", EditorStyles.boldLabel);
+            var hierarchyLineRect = GUILayoutUtility.GetRect(1, 1, GUILayout.ExpandWidth(true));
+            EditorGUI.DrawRect(hierarchyLineRect, new Color(0.3f, 0.3f, 0.3f, 1f));
+            EditorGUILayout.Space(4);
+            
+            const string hierarchyLinesKey = "Strix.Hierarchy.ShowLines";
+            var showLines = EditorPrefs.GetBool(hierarchyLinesKey, true);
+            var newShowLines = EditorGUILayout.ToggleLeft("Show Hierarchy Lines", showLines);
+            if (newShowLines != showLines) EditorPrefs.SetBool(hierarchyLinesKey, newShowLines);
+            
+            EditorGUILayout.Space(1);
+            
+            EditorGUI.BeginDisabledGroup(!newShowLines);
+            var currentStyle = EditorPrefs.GetInt("Strix.Hierarchy.LineStyle", 0);
+            var styleOptions = new[] { "Solid", "Dotted", "Dashed" };
+            var selected = EditorGUILayout.Popup("Line Style", currentStyle, styleOptions);
+
+            if (selected != currentStyle)
+                EditorPrefs.SetInt("Strix.Hierarchy.LineStyle", selected);
+            EditorGUI.EndDisabledGroup();
+            
+            EditorGUILayout.Space(1);
+
+
             // Logging
-            var logsLabelStyle = new GUIStyle(EditorStyles.label) {
-                fontStyle = FontStyle.Bold,
-                normal = { textColor = new Color(0.7f, 0.7f, 0.7f) }
-            };
-            
-            EditorGUILayout.LabelField("Logs:", logsLabelStyle);
+            EditorGUILayout.LabelField("Logs:", EditorStyles.boldLabel);
             var lineRect = GUILayoutUtility.GetRect(1, 1, GUILayout.ExpandWidth(true));
             EditorGUI.DrawRect(lineRect, new Color(0.3f, 0.3f, 0.3f, 1f));
             EditorGUILayout.Space(4);

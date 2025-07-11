@@ -202,7 +202,7 @@ namespace Strix.Editor.Hierarchy {
                     
                 case LineStyle.Dashed:
                     // Proper dashed line with longer segments
-                    Handles.DrawDottedLine(start, end, isVertical ? 6f : 8f);
+                    Handles.DrawDottedLine(start, end, isVertical ? 4f : 6f);
                     break;
                     
                 case LineStyle.DoubleLine:

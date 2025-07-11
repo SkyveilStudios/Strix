@@ -8,12 +8,14 @@ namespace Strix.Editor.Hub {
         private enum ComponentType {
             AudioSourcePreview,
             SceneNote,
-            TransformLock
+            TransformLock,
+            DistanceMeasurer
         }
 
         private static AudioSourcePreview _audioSourceInstance;
         private static SceneNote _sceneNoteInstance;
         private static TransformLock _transformLockInstance;
+        private static DistanceMeasurer _distanceMeasurer;
         private static UnityEditor.Editor _previewEditor;
         private static Vector2 _scroll;
 
@@ -60,6 +62,7 @@ namespace Strix.Editor.Hub {
             DrawComponentButton("AudioSourcePreview", ComponentType.AudioSourcePreview);
             DrawComponentButton("SceneNote", ComponentType.SceneNote);
             DrawComponentButton("TransformLock", ComponentType.TransformLock);
+            DrawComponentButton("DistanceMeasurer",  ComponentType.DistanceMeasurer);
 
             GUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
@@ -100,6 +103,7 @@ namespace Strix.Editor.Hub {
                 ComponentType.AudioSourcePreview => "Allows you to preview audio clips directly in the editor without entering Play Mode.",
                 ComponentType.SceneNote => "Adds developer notes directly into your scene view to help communicate intent or reminders.",
                 ComponentType.TransformLock => "Locks transform changes to prevent accidental editing in the Unity Editor.",
+                ComponentType.DistanceMeasurer => "Measures and displays distances between this object and target objects with visual gizmos.",
                 _ => "No description available."
             };
 
@@ -121,6 +125,10 @@ namespace Strix.Editor.Hub {
                 case ComponentType.TransformLock:
                     EnsureTransformLockPreview();
                     DrawEditorPreview(_transformLockInstance);
+                    break;
+                case ComponentType.DistanceMeasurer:
+                    EnsureDistanceMeasurerPreview();
+                    DrawEditorPreview(_distanceMeasurer);
                     break;
             }
         }
@@ -164,6 +172,13 @@ namespace Strix.Editor.Hub {
             var go = HubTabUtils.CreateOrGetPreviewGo();
             if (!go.TryGetComponent(out _transformLockInstance))
                 _transformLockInstance = go.AddComponent<TransformLock>();
+        }
+        
+        private static void EnsureDistanceMeasurerPreview() {
+            if (_distanceMeasurer) return;
+            var go = HubTabUtils.CreateOrGetPreviewGo();
+            if (!go.TryGetComponent(out _distanceMeasurer))
+                _distanceMeasurer = go.AddComponent<DistanceMeasurer>();
         }
 
         [InitializeOnLoadMethod]

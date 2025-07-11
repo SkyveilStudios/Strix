@@ -18,7 +18,7 @@ public class MeasurementTarget
 public class DistanceMeasurer : MonoBehaviour
 {
     [Header("Measurement Targets")]
-    [SerializeField] private List<MeasurementTarget> targets = new List<MeasurementTarget>();
+    [SerializeField] private List<MeasurementTarget> targets = new();
     
     [Header("Display Settings")]
     [SerializeField] private bool showInPlayMode = false;

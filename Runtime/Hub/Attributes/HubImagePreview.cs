@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Strix.Runtime.Hub.Attributes {
     public class HubImagePreview : MonoBehaviour
     {
-        [ImagePreview("Assets/Strix/Banners/StrixBanner.jpg", 400f)]
+        [ImagePreview("Assets/Strix/Banners/StrixBanner.jpg", 400f, false)]
         [SerializeField] private GameObject obj;
     }
 }

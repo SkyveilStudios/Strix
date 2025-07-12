@@ -134,6 +134,7 @@ namespace Strix.Editor.Drawers {
             // Right line
             var rightLineStart = layoutData.TitleRect.xMax + space;
             var rightLineEnd = layoutData.Position.x + layoutData.Position.width;
+
             if (rightLineEnd > rightLineStart) {
                 var rightLineRect = new Rect(rightLineStart, layoutData.LineY, rightLineEnd - rightLineStart, lineHeight);
                 DrawStyledLine(rightLineRect, lineColor);

@@ -76,11 +76,11 @@ namespace Strix.Editor.Drawers {
             }
 
             var layout = CalculateLayout(position, cachedTexture.Texture, attr);
-            HandleInteraction(layout.imageRect);
+            HandleInteraction(layout.ImageRect);
             DrawImageWithEffects(layout, cachedTexture.Texture, attr);
             
             if (_showTooltip && !string.IsNullOrEmpty(_tooltipText)) {
-                DrawTooltip(layout.imageRect);
+                DrawTooltip(layout.ImageRect);
             }
         }
 
@@ -112,7 +112,7 @@ namespace Strix.Editor.Drawers {
         #endregion
 
         #region Private Methods - Initialization
-        private void InitializeStyles() {
+        private static void InitializeStyles() {
             _errorStyle = new GUIStyle(EditorStyles.helpBox) {
                 normal = { textColor = Color.red },
                 fontSize = 11,
@@ -126,7 +126,7 @@ namespace Strix.Editor.Drawers {
             _stylesInitialized = true;
         }
 
-        private Texture2D CreateColorTexture(Color color) {
+        private static Texture2D CreateColorTexture(Color color) {
             var texture = new Texture2D(1, 1);
             texture.SetPixel(0, 0, color);
             texture.Apply();
@@ -212,9 +212,9 @@ namespace Strix.Editor.Drawers {
                 imageRect;
 
             return new ImageLayout {
-                imageRect = imageRect,
-                borderRect = borderRect,
-                shadowRect = attr.ShowShadow ? 
+                ImageRect = imageRect,
+                BorderRect = borderRect,
+                ShadowRect = attr.ShowShadow ? 
                     new Rect(imageRect.x + ShadowOffset, imageRect.y + ShadowOffset, 
                              imageRect.width, imageRect.height) : 
                     imageRect
@@ -304,9 +304,9 @@ namespace Strix.Editor.Drawers {
         #region Private Methods - Drawing
         private void DrawImageWithEffects(ImageLayout layout, Texture2D texture, ImagePreviewAttribute attr) {
             // Apply scaling animation
-            var scaledRect = ApplyScaling(layout.imageRect);
-            var scaledBorderRect = ApplyScaling(layout.borderRect);
-            var scaledShadowRect = ApplyScaling(layout.shadowRect);
+            var scaledRect = ApplyScaling(layout.ImageRect);
+            var scaledBorderRect = ApplyScaling(layout.BorderRect);
+            var scaledShadowRect = ApplyScaling(layout.ShadowRect);
 
             // Draw shadow
             if (attr.ShowShadow) {
@@ -386,7 +386,7 @@ namespace Strix.Editor.Drawers {
             var targetScale = _isHovered ? HoverScale : 1f;
             _currentScale = Mathf.Lerp(_currentScale, targetScale, Time.deltaTime * AnimationSpeed);
             
-            var targetAlpha = 1f;
+            const float targetAlpha = 1f;
             _fadeAlpha = Mathf.Lerp(_fadeAlpha, targetAlpha, Time.deltaTime * FadeSpeed);
 
             if (_isHovered || !Mathf.Approximately(_currentScale, 1f)) {
@@ -412,9 +412,9 @@ namespace Strix.Editor.Drawers {
         }
 
         private struct ImageLayout {
-            public Rect imageRect;
-            public Rect borderRect;
-            public Rect shadowRect;
+            public Rect ImageRect;
+            public Rect BorderRect;
+            public Rect ShadowRect;
         }
         #endregion
     }
